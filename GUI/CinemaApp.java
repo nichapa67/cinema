@@ -28,12 +28,12 @@ public class CinemaApp extends JFrame {
     public void showPage2(String movieName, String movieImage) {
         bookingSession.setMovieName(movieName);
         bookingSession.setMovieImage(movieImage);
-        setContentPane(new Page2Panel(this, movieName, movieImage)); // ✅ ส่งค่า movieName, movieImage
+        setContentPane(new Page2Panel(this, movieName, movieImage)); 
         revalidate();
         repaint();
     }
 
-    // ใช้แค่ดึง date, time จาก session ไม่ต้องส่ง parameter
+    // กรณีกลับมา Page2 โดยไม่ต้องส่งค่าใหม่
     public void showPage2() {
         setContentPane(new Page2Panel(this,
                 bookingSession.getMovieName(),
@@ -42,22 +42,28 @@ public class CinemaApp extends JFrame {
         repaint();
     }
 
+    // ไปหน้าเลือกที่นั่ง (Page3)
     public void showPage3(String date, String time) {
         bookingSession.setDate(date);
         bookingSession.setTime(time);
-        setContentPane(new Page3Panel(this)); // ✅ ไม่ต้องส่ง date, time เพราะไป get จาก session
+        setContentPane(new Page3Panel(this)); 
         revalidate();
         repaint();
     }
 
-    public void showPage4() {
-        setContentPane(new Page4Panel(this,
-                bookingSession.getMovieName(),
-                bookingSession.getDate(),
-                bookingSession.getTime()));
+    // กลับไปหน้า 3 อีกครั้ง โดยใช้ค่าจาก session
+    public void showPage3() {
+        setContentPane(new Page3Panel(this));
         revalidate();
         repaint();
     }
+
+    // ไปหน้า 4 
+    public void showPage4() {
+    setContentPane(new Page4Panel(this));  // ไม่ส่ง parameter
+    revalidate();
+    repaint();
+}
 
     public void showPage41() {
         setContentPane(new Page41Panel(this));
@@ -76,17 +82,6 @@ public class CinemaApp extends JFrame {
         revalidate();
         repaint();
     }
-
-    /*public void showPage6(String phone) {
-        setContentPane(new Page6Panel(this,
-                bookingSession.getMovieName(),
-                bookingSession.getDate(),
-                bookingSession.getTime(),
-                bookingSession.getSelectedSeats(),
-                phone));
-        revalidate();
-        repaint();
-    }*/
 
     public void showAdminPanel() {
         setContentPane(new AdminPanel(this));

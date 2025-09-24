@@ -142,7 +142,7 @@ public class Page2Panel extends JPanel {
     // ปุ่มสีน้ำเงิน ตัวอักษรขาว 
     private JButton createBlueButton(String text) {
         JButton btn = new JButton(text);
-        btn.setBackground(new Color(30, 144, 255)); // Dodger Blue
+        btn.setBackground(Color.BLUE);
         btn.setForeground(Color.WHITE);
         btn.setFocusPainted(false);
         btn.setFont(new Font("SansSerif", Font.BOLD, 16));

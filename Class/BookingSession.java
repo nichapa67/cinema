@@ -2,19 +2,19 @@ package Class;
 import java.util.*;
 
 public class BookingSession {
-    private String movieName;
-    private String movieImage;
-    private String date;
-    private String time;
-    private List<String> selectedSeats;
-    private int totalPrice;
+    private String movieName;       // ชื่อหนัง
+    private String movieImage;      // ไฟล์รูป เช่น "Movie1.jpg"
+    private String date;            // วันที่
+    private String time;            // เวลา
+    private List<String> selectedSeats; // ที่นั่งที่เลือก
+    private int totalPrice;         // ราคารวม
 
     public BookingSession() {
         selectedSeats = new ArrayList<>();
         totalPrice = 0;
     }
 
-    // Movie 
+    // ===== Movie =====
     public String getMovieName() {
         return movieName;
     }
@@ -29,7 +29,7 @@ public class BookingSession {
         this.movieImage = movieImage;
     }
 
-    // Date
+    // ===== Date =====
     public String getDate() {
         return date;
     }
@@ -37,7 +37,7 @@ public class BookingSession {
         this.date = date;
     }
 
-    // Time 
+    // ===== Time =====
     public String getTime() {
         return time;
     }
@@ -45,14 +45,13 @@ public class BookingSession {
         this.time = time;
     }
 
-    // Seats
+    // ===== Seats =====
     public List<String> getSelectedSeats() {
-        return selectedSeats;
+        return new ArrayList<>(selectedSeats); // ป้องกันการแก้ไขจากภายนอก
     }
 
-    // ใช้เวลาเลือกใหม่ทั้ง list
     public void setSeats(List<String> seats) {
-        this.selectedSeats = new ArrayList<>(seats);
+        this.selectedSeats = new ArrayList<>(seats); // กำหนดใหม่ทั้ง list
     }
 
     public void addSeat(String seat) {
@@ -60,14 +59,16 @@ public class BookingSession {
             selectedSeats.add(seat);
         }
     }
+
     public void removeSeat(String seat) {
         selectedSeats.remove(seat);
     }
+
     public void clearSeats() {
         selectedSeats.clear();
     }
 
-    // Price
+    // ===== Price =====
     public int getTotalPrice() {
         return totalPrice;
     }
@@ -75,7 +76,7 @@ public class BookingSession {
         this.totalPrice = totalPrice;
     }
 
-    // Reset
+    // ===== Reset Session =====
     public void resetSession() {
         movieName = null;
         movieImage = null;
@@ -83,5 +84,18 @@ public class BookingSession {
         time = null;
         selectedSeats.clear();
         totalPrice = 0;
+    }
+
+    // ===== Debug =====
+    @Override
+    public String toString() {
+        return "BookingSession{" +
+                "movieName='" + movieName + '\'' +
+                ", movieImage='" + movieImage + '\'' +
+                ", date='" + date + '\'' +
+                ", time='" + time + '\'' +
+                ", seats=" + selectedSeats +
+                ", totalPrice=" + totalPrice +
+                '}';
     }
 }

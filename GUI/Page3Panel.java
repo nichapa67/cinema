@@ -1,17 +1,17 @@
 package GUI;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-
 public class Page3Panel extends JPanel {
     private ArrayList<JButton> selectedSeats = new ArrayList<>();
     private JLabel seatLabel;
     private JLabel totalLabel;
 
-    private CinemaApp app;
+    public CinemaApp app;
 
     public Page3Panel(CinemaApp app) {
         this.app = app;
@@ -161,9 +161,9 @@ public class Page3Panel extends JPanel {
             for (JButton btn : selectedSeats) {
                 seatList.add(btn.getText());
             }
-            app.getBookingSession().setSeats(seatList);
-            app.getBookingSession().setTotalPrice(getTotalPrice());
-            app.showPage4();
+            app.getBookingSession().setSeats(seatList);   // เก็บที่นั่ง
+            app.getBookingSession().setTotalPrice(getTotalPrice()); // เก็บราคา
+            app.showPage4(); // ไปหน้า 4
         });
 
         bottomPanel.add(backButton, BorderLayout.WEST);
