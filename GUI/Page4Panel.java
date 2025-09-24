@@ -137,7 +137,7 @@ public class Page4Panel extends JPanel {
         continueButton.setForeground(Color.WHITE);
         continueButton.setPreferredSize(new Dimension(140, 46));
         continueButton.setFocusPainted(false);
-        continueButton.addActionListener(e -> app.showPage5());
+        continueButton.addActionListener(e -> app.showPage5("Page4Panel"));
 
         bottomPanel.add(backButton, BorderLayout.WEST);
         bottomPanel.add(continueButton, BorderLayout.EAST);

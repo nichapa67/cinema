@@ -1,9 +1,7 @@
 package GUI;
-
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.util.ArrayList;
 
 public class Page3Panel extends JPanel {
@@ -30,7 +28,7 @@ public class Page3Panel extends JPanel {
         add(title, BorderLayout.NORTH);
 
         // Center Content (Left = Seats, Right = Info) 
-        JPanel centerPanel = new JPanel(new GridLayout(1, 2));
+        JPanel centerPanel = new JPanel(new BorderLayout());
         centerPanel.setBackground(Color.BLACK);
 
         //  Left Side
@@ -113,6 +111,7 @@ public class Page3Panel extends JPanel {
 
         // ===== Right Side =====
         JPanel rightPanel = new JPanel();
+        rightPanel.setPreferredSize(new Dimension(250, 0)); 
         rightPanel.setBackground(Color.WHITE);
         rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
         rightPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
@@ -138,8 +137,10 @@ public class Page3Panel extends JPanel {
         rightPanel.add(Box.createVerticalStrut(20));
         rightPanel.add(totalLabel);
 
-        centerPanel.add(leftPanel);
-        centerPanel.add(rightPanel);
+        
+        centerPanel.add(leftPanel, BorderLayout.CENTER);
+        centerPanel.add(rightPanel, BorderLayout.EAST);
+
 
         add(centerPanel, BorderLayout.CENTER);
 

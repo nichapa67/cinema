@@ -63,7 +63,7 @@ public class CinemaApp extends JFrame {
     setContentPane(new Page4Panel(this));  // ไม่ส่ง parameter
     revalidate();
     repaint();
-}
+    }
 
     public void showPage41() {
         setContentPane(new Page41Panel(this));
@@ -71,14 +71,20 @@ public class CinemaApp extends JFrame {
         repaint();
     }
 
-    public void showPage42(int setIndex) {
-        setContentPane(new Page42Panel(this, setIndex));
+    public void showPage42(String setName, String price, String imageFile) {
+        setContentPane(new Page42Panel(this, setName, price, imageFile));
         revalidate();
         repaint();
     }
 
-    public void showPage5() {
-        setContentPane(new Page5Panel(this));
+    public void showPage5(String fromPage) {
+        setContentPane(new Page5Panel(this, fromPage));
+        revalidate();
+        repaint();
+    }
+
+    public void showPage6(BookingSession session) {
+        setContentPane(new Page6Panel(this,session)); // ไปหน้า Page6Panel
         revalidate();
         repaint();
     }

@@ -8,6 +8,14 @@ public class BookingSession {
     private String time;            // เวลา
     private List<String> selectedSeats; // ที่นั่งที่เลือก
     private int totalPrice;         // ราคารวม
+    private String mobile;          // เบอร์มือถือ
+    private String bookingID;      // รหัสการจอง (สร้างตอนยืนยันการจอง)
+
+
+    // ===== Add-on =====
+    private String selectedAddonName;   // ชื่อ Add-on
+    private String selectedAddonPrice;  // ราคา Add-on (เก็บเป็น String เช่น "100 THB")
+    private String selectedAddonImage;  // รูป Add-on
 
     public BookingSession() {
         selectedSeats = new ArrayList<>();
@@ -76,6 +84,28 @@ public class BookingSession {
         this.totalPrice = totalPrice;
     }
 
+    // ===== Add-on =====
+    public String getSelectedAddonName() {
+        return selectedAddonName;
+    }
+    public void setSelectedAddonName(String selectedAddonName) {
+        this.selectedAddonName = selectedAddonName;
+    }
+
+    public String getSelectedAddonPrice() {
+        return selectedAddonPrice;
+    }
+    public void setSelectedAddonPrice(String selectedAddonPrice) {
+        this.selectedAddonPrice = selectedAddonPrice;
+    }
+
+    public String getSelectedAddonImage() {
+        return selectedAddonImage;
+    }
+    public void setSelectedAddonImage(String selectedAddonImage) {
+        this.selectedAddonImage = selectedAddonImage;
+    }
+
     // ===== Reset Session =====
     public void resetSession() {
         movieName = null;
@@ -84,7 +114,29 @@ public class BookingSession {
         time = null;
         selectedSeats.clear();
         totalPrice = 0;
+
+        selectedAddonName = null;
+        selectedAddonPrice = null;
+        selectedAddonImage = null;
     }
+
+    // ===== Mobile =====
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    // ===== Booking ID =====
+    public void setBookingID(String bookingID) {
+    this.bookingID = bookingID;
+}
+
+public String getBookingID() {
+    return bookingID;
+}
 
     // ===== Debug =====
     @Override
@@ -96,6 +148,9 @@ public class BookingSession {
                 ", time='" + time + '\'' +
                 ", seats=" + selectedSeats +
                 ", totalPrice=" + totalPrice +
+                ", selectedAddonName='" + selectedAddonName + '\'' +
+                ", selectedAddonPrice='" + selectedAddonPrice + '\'' +
+                ", selectedAddonImage='" + selectedAddonImage + '\'' +
                 '}';
     }
 }
