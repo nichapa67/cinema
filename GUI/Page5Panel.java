@@ -25,9 +25,10 @@ public class Page5Panel extends JPanel {
 
         // ===== Title =====
         JLabel titleLabel = new JLabel("Confirm", SwingConstants.CENTER);
-        titleLabel.setFont(new Font("SansSerif", Font.BOLD, 36));
+        titleLabel.setFont(new Font("SansSerif", Font.BOLD, 50));
         titleLabel.setForeground(Color.WHITE);
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        titleLabel.setBorder(BorderFactory.createEmptyBorder(80, 0, 0, 0));
         centerPanel.add(titleLabel);
 
         // ระยะห่าง 20px
@@ -47,9 +48,10 @@ public class Page5Panel extends JPanel {
         gbc.gridx = 0; gbc.gridy = 0;
         formPanel.add(mobileLabel, gbc);
 
-        mobileField = new JTextField(10);
+        // preload mobile จาก session ถ้ามี
+        mobileField = new JTextField(session.getMobile() != null ? session.getMobile() : "", 10);
         mobileField.setFont(new Font("SansSerif", Font.PLAIN, 22));
-        mobileField.setPreferredSize(new Dimension(300, 40));
+        mobileField.setPreferredSize(new Dimension(500, 40));
         gbc.gridx = 1; gbc.gridy = 0;
         formPanel.add(mobileField, gbc);
 
@@ -101,6 +103,7 @@ public class Page5Panel extends JPanel {
         confirmButton.setBackground(Color.GREEN);
         confirmButton.setForeground(Color.BLACK);
         confirmButton.setPreferredSize(new Dimension(160, 50));
+
         confirmButton.addActionListener(e -> {
             String mobile = mobileField.getText().trim();
 
@@ -112,34 +115,34 @@ public class Page5Panel extends JPanel {
                 return;
             }
 
-            // เก็บค่าเบอร์โทร
-    session.setMobile(mobile);
+            // เก็บค่าเบอร์โทรลง session
+            session.setMobile(mobile);
 
-    // ดึงวัน เดือน เวลา จาก session
-    String date = session.getDate();   // เช่น "20/09"
-    String time = session.getTime();   // เช่น "12:00"
+            // ดึงวัน เดือน เวลา จาก session
+            String date = session.getDate();   // เช่น "20/09"
+            String time = session.getTime();   // เช่น "12:00"
 
-    // แยกวันกับเดือน
-    String[] dateParts = date.split("/"); 
-    String day = dateParts[0];   // "20"
-    String month = dateParts[1]; // "09"
+            // แยกวันกับเดือน
+            String[] dateParts = date.split("/"); 
+            String day = dateParts[0];   // "20"
+            String month = dateParts[1]; // "09"
 
-    // เอาเวลาออก ":" เช่น "12:00" -> "1200"
-    String timeFormatted = time.replace(":", "");
+            // เอาเวลาออก ":" เช่น "12:00" -> "1200"
+            String timeFormatted = time.replace(":", "");
 
-    // สร้าง Booking ID
-    String bookingID = mobile + day + month + timeFormatted;
+            // สร้าง Booking ID
+            String bookingID = mobile + day + month + timeFormatted;
 
-    // เก็บ Booking ID ลง session
-    session.setBookingID(bookingID);
+            // เก็บ Booking ID ลง session
+            session.setBookingID(bookingID);
 
-    // แสดงผล
-    JOptionPane.showMessageDialog(this,
-            "You have successfully confirmed your order.\nBooking ID: " + bookingID,
-            "Confirmation", JOptionPane.INFORMATION_MESSAGE);
+            // แสดงผล
+            JOptionPane.showMessageDialog(this,
+                    "You have successfully confirmed your order.\nBooking ID: " + bookingID,
+                    "Confirmation", JOptionPane.INFORMATION_MESSAGE);
 
-    app.showPage6(session);
-});
+            app.showPage6(session);
+        });
 
         buttonPanel.add(backButton, BorderLayout.WEST);
         buttonPanel.add(confirmButton, BorderLayout.EAST);

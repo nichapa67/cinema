@@ -7,6 +7,7 @@ import Class.BookingSession;
 
 public class Page42Panel extends JPanel {
     public CinemaApp app;
+    private JLabel priceLabel; // ต้องเป็น field
 
     public Page42Panel(CinemaApp app, String setName, String setPrice, String setImage) {
         this.app = app;
@@ -14,6 +15,13 @@ public class Page42Panel extends JPanel {
         setBackground(Color.BLACK);
 
         BookingSession session = app.getBookingSession();
+
+        // ===== เซ็ตค่า Add-on เข้าสู่ session ตั้งแต่เริ่ม =====
+        int addonPrice = Integer.parseInt(setPrice.replace(" THB", ""));
+        session.setAddonPrice(addonPrice);
+        session.setSelectedAddonName(setName);
+        session.setSelectedAddonPrice(setPrice);
+        session.setSelectedAddonImage(setImage);
 
         // ===== TOP: TOTAL =====
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
@@ -23,8 +31,7 @@ public class Page42Panel extends JPanel {
         totalLabel.setFont(new Font("SansSerif", Font.BOLD, 40));
         totalLabel.setForeground(Color.WHITE);
 
-        int totalPrice = session.getTotalPrice() + Integer.parseInt(setPrice.replace(" THB", ""));
-        JLabel priceLabel = new JLabel(totalPrice + " THB");
+        priceLabel = new JLabel(session.getTotalPrice() + " THB");
         priceLabel.setFont(new Font("SansSerif", Font.BOLD, 40));
         priceLabel.setForeground(Color.WHITE);
         priceLabel.setBorder(new LineBorder(Color.GRAY, 3));
@@ -38,72 +45,64 @@ public class Page42Panel extends JPanel {
         add(topPanel, BorderLayout.NORTH);
 
         // ===== CENTER =====
-JPanel centerPanel = new JPanel();
-centerPanel.setBackground(Color.BLACK);
-centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.X_AXIS));
-centerPanel.setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30)); // padding รอบนอก
+        JPanel centerPanel = new JPanel();
+        centerPanel.setBackground(Color.BLACK);
+        centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.X_AXIS));
+        centerPanel.setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
 
-// เติมกล่องว่างเพื่อดันไปกลาง
-centerPanel.add(Box.createHorizontalGlue());
+        centerPanel.add(Box.createHorizontalGlue());
+        centerPanel.add(Box.createRigidArea(new Dimension(60, 0)));
 
-// เพิ่มที่ว่างด้านซ้ายของรูปหนัง (เช่น 60px)
-centerPanel.add(Box.createRigidArea(new Dimension(60, 0)));
+        // รูปหนัง
+        JLabel moviePhoto = new JLabel();
+        if (session.getMovieImage() != null) {
+            ImageIcon icon = new ImageIcon("Picture/" + session.getMovieImage());
+            Image scaled = icon.getImage().getScaledInstance(200, 280, Image.SCALE_SMOOTH);
+            moviePhoto.setIcon(new ImageIcon(scaled));
+        } else {
+            moviePhoto.setText("Movie Photo");
+            moviePhoto.setForeground(Color.WHITE);
+        }
+        centerPanel.add(moviePhoto);
 
-// รูปหนัง
-JLabel moviePhoto = new JLabel();
-if (session.getMovieImage() != null) {
-    ImageIcon icon = new ImageIcon("Picture/" + session.getMovieImage());
-    Image scaled = icon.getImage().getScaledInstance(200, 280, Image.SCALE_SMOOTH);
-    moviePhoto.setIcon(new ImageIcon(scaled));
-} else {
-    moviePhoto.setText("Movie Photo");
-    moviePhoto.setForeground(Color.WHITE);
-}
-centerPanel.add(moviePhoto);
+        centerPanel.add(Box.createRigidArea(new Dimension(40, 0)));
 
-// ช่องว่างระหว่างรูปหนังกับ Add-on
-centerPanel.add(Box.createRigidArea(new Dimension(40, 0))); // เพิ่มเป็น 40px
+        // รูป Add-on
+        JLabel addonPhoto = new JLabel();
+        try {
+            ImageIcon icon = new ImageIcon("Picture/" + setImage);
+            Image scaled = icon.getImage().getScaledInstance(150, 280, Image.SCALE_SMOOTH);
+            addonPhoto.setIcon(new ImageIcon(scaled));
+        } catch (Exception e) {
+            addonPhoto.setText("Add-on Photo");
+            addonPhoto.setForeground(Color.WHITE);
+        }
+        centerPanel.add(addonPhoto);
 
-// รูป Add-on
-JLabel addonPhoto = new JLabel();
-try {
-    ImageIcon icon = new ImageIcon("Picture/" + setImage);
-    Image scaled = icon.getImage().getScaledInstance(150, 280, Image.SCALE_SMOOTH);
-    addonPhoto.setIcon(new ImageIcon(scaled));
-} catch (Exception e) {
-    addonPhoto.setText("Add-on Photo");
-    addonPhoto.setForeground(Color.WHITE);
-}
-centerPanel.add(addonPhoto);
+        centerPanel.add(Box.createRigidArea(new Dimension(60, 0)));
 
-// ช่องว่างระหว่าง Add-on กับข้อความ
-centerPanel.add(Box.createRigidArea(new Dimension(60, 0))); // เพิ่มเป็น 60px
+        // ข้อมูลด้านขวา
+        JPanel rightPanel = new JPanel();
+        rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
+        rightPanel.setBackground(Color.BLACK);
 
-// ข้อความฝั่งขวา
-JPanel rightPanel = new JPanel();
-rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
-rightPanel.setBackground(Color.BLACK);
+        rightPanel.add(Box.createVerticalGlue());
+        rightPanel.add(makeInfoLabel("Name: " + session.getMovieName()));
+        rightPanel.add(Box.createVerticalStrut(12));
+        rightPanel.add(makeInfoLabel("Date: " + session.getDate()));
+        rightPanel.add(Box.createVerticalStrut(12));
+        rightPanel.add(makeInfoLabel("Time: " + session.getTime()));
+        String seatText = String.join(", ", session.getSelectedSeats());
+        rightPanel.add(Box.createVerticalStrut(12));
+        rightPanel.add(makeInfoLabel("Seat: " + (seatText.isEmpty() ? "-" : seatText)));
+        rightPanel.add(Box.createVerticalStrut(12));
+        rightPanel.add(makeInfoLabel("Add-on: " + setName));
+        rightPanel.add(Box.createVerticalGlue());
 
-rightPanel.add(Box.createVerticalGlue());
-rightPanel.add(makeInfoLabel("Name: " + session.getMovieName()));
-rightPanel.add(Box.createVerticalStrut(12));
-rightPanel.add(makeInfoLabel("Date: " + session.getDate()));
-rightPanel.add(Box.createVerticalStrut(12));
-rightPanel.add(makeInfoLabel("Time: " + session.getTime()));
-String seatText = String.join(", ", session.getSelectedSeats());
-rightPanel.add(Box.createVerticalStrut(12));
-rightPanel.add(makeInfoLabel("Seat: " + (seatText.isEmpty() ? "-" : seatText)));
-rightPanel.add(Box.createVerticalStrut(12));
-rightPanel.add(makeInfoLabel("Add-on: " + setName));
-rightPanel.add(Box.createVerticalGlue());
+        centerPanel.add(rightPanel);
+        centerPanel.add(Box.createHorizontalGlue());
 
-centerPanel.add(rightPanel);
-
-// เติมกล่องว่างอีกด้านเพื่อบาลานซ์
-centerPanel.add(Box.createHorizontalGlue());
-
-add(centerPanel, BorderLayout.CENTER);
-
+        add(centerPanel, BorderLayout.CENTER);
 
         // ===== BOTTOM BUTTONS =====
         JPanel bottomPanel = new JPanel(new BorderLayout());
@@ -123,16 +122,18 @@ add(centerPanel, BorderLayout.CENTER);
         confirmButton.setForeground(Color.BLACK);
         confirmButton.setPreferredSize(new Dimension(160, 50));
         confirmButton.addActionListener(e -> {
-    // เก็บค่า Add-on ลงใน session ก่อน
-    session.setSelectedAddonName(setName);
-    session.setSelectedAddonPrice(setPrice);
-    session.setSelectedAddonImage(setImage);
-    session.setTotalPrice(session.getTotalPrice() + Integer.parseInt(setPrice.replace(" THB", "")));
+            // กดแล้ว update อีกครั้งกันพลาด
+            session.setAddonPrice(addonPrice);
+            session.setSelectedAddonName(setName);
+            session.setSelectedAddonPrice(setPrice);
+            session.setSelectedAddonImage(setImage);
 
-    // ไปหน้า Page5 โดยบอกว่า มาจาก Page42Panel
-    app.showPage5("Page42Panel");
-});
-        
+            // refresh TOTAL
+            priceLabel.setText(session.getTotalPrice() + " THB");
+
+            // ไป Page5
+            app.showPage5("Page42Panel");
+        });
 
         bottomPanel.add(backButton, BorderLayout.WEST);
         bottomPanel.add(confirmButton, BorderLayout.EAST);

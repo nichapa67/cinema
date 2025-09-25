@@ -65,32 +65,30 @@ public class CinemaApp extends JFrame {
     repaint();
     }
 
+    // ไปหน้า 4.1 (ถ้ามี add-on)
     public void showPage41() {
         setContentPane(new Page41Panel(this));
         revalidate();
         repaint();
     }
 
+    // ไปหน้า 4.2 (ถ้าเลือก add-on)
     public void showPage42(String setName, String price, String imageFile) {
         setContentPane(new Page42Panel(this, setName, price, imageFile));
         revalidate();
         repaint();
     }
 
+    // ไปหน้า 5 (สรุปข้อมูล)
     public void showPage5(String fromPage) {
         setContentPane(new Page5Panel(this, fromPage));
         revalidate();
         repaint();
     }
 
+    // ไปหน้า 6 (กรอกเบอร์โทร)
     public void showPage6(BookingSession session) {
         setContentPane(new Page6Panel(this,session)); // ไปหน้า Page6Panel
-        revalidate();
-        repaint();
-    }
-
-    public void showAdminPanel() {
-        setContentPane(new AdminPanel(this));
         revalidate();
         repaint();
     }

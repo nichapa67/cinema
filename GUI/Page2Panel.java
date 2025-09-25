@@ -8,8 +8,8 @@ public class Page2Panel extends JPanel {
     private String selectedDate = null;
     private String selectedTime = null;
 
-    private java.util.List<JButton> dateButtons = new ArrayList<>();
-    private java.util.List<JButton> timeButtons = new ArrayList<>();
+    private java.util.List<JButton> dateButtons = new ArrayList<>(); // เก็บปุ่มวันที่ทั้งหมด
+    private java.util.List<JButton> timeButtons = new ArrayList<>(); // เก็บปุ่มเวลาทั้งหมด
 
     public Page2Panel(CinemaApp app, String movieName, String movieImage) {
         setLayout(new BorderLayout(15, 15));
@@ -83,6 +83,7 @@ public class Page2Panel extends JPanel {
         timeLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         rightPanel.add(timeLabel);
 
+        // ปุ่มเลือกเวลา
         JPanel timePanel = new JPanel(new GridLayout(2, 2, 10, 10));
         timePanel.setBackground(Color.BLACK);
 
@@ -114,6 +115,7 @@ public class Page2Panel extends JPanel {
         JButton backBtn = createBlueButton("Back");
         JButton continueBtn = createBlueButton("Continue");
 
+        //แจ้งเตือนถ้าไม่ได้เลือก Date หรือ Time
         backBtn.addActionListener(e -> app.showPage1());
         continueBtn.addActionListener(e -> {
             if (selectedDate != null && selectedTime != null) {
@@ -148,7 +150,7 @@ public class Page2Panel extends JPanel {
         btn.setFont(new Font("SansSerif", Font.BOLD, 16));
         return btn;
     }
-    // Toggle Date 
+    // Toggle Date เพื่อเลือกวัน 
     private void toggleDate(String date, JButton btn) {
         if (selectedDate != null && selectedDate.equals(date)) {
             // ถ้ากดซ้ำ → reset
@@ -168,7 +170,7 @@ public class Page2Panel extends JPanel {
         }
     }
 
-    // Toggle Time 
+    // Toggle Time เพื่อเลือกเวลา
     private void toggleTime(String time, JButton btn) {
         if (selectedTime != null && selectedTime.equals(time)) {
             // ถ้ากดซ้ำ reset

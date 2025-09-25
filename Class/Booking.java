@@ -4,17 +4,17 @@ import java.util.*;
 public class Booking {
     private String phone;
     private String movieName;
-    private String movieImage; // << เพิ่ม field เก็บชื่อไฟล์รูป
+    private String movieImage; // เก็บชื่อไฟล์รูป
     private String date; // format dd/MM/yyyy
     private String time; // format HH:mm
-    private List<String> seats; // list of seat ids like "A01"
+    private List<String> seats; // list of Seat ID
     private String setName; // nullable
     
 
     public Booking(String phone, String movieName, String movieImage, String date, String time, List<String> seats, String setName){
         this.phone = phone;
         this.movieName = movieName;
-        this.movieImage = movieImage;  // << new
+        this.movieImage = movieImage;  
         this.date = date;
         this.time = time;
         this.seats = new ArrayList<>(seats);
@@ -23,7 +23,7 @@ public class Booking {
 
     public String getPhone(){ return phone; }
     public String getMovieName(){ return movieName; }
-    public String getMovieImage(){ return movieImage; } // << new
+    public String getMovieImage(){ return movieImage; }
     public String getDate(){ return date; }
     public String getTime(){ return time; }
     public List<String> getSeats(){ return new ArrayList<>(seats); }
@@ -48,10 +48,10 @@ public class Booking {
 
     public static Booking fromCSV(String line){
         String[] parts = line.split(",", -1);
-        if (parts.length < 7) return null; // << เพราะเพิ่ม movieImage เป็น column 3
+        if (parts.length < 7) return null; // เพิ่ม movieImage เป็น column 3
         String phone = parts[0];
         String movie = parts[1];
-        String movieImage = parts[2]; // << new
+        String movieImage = parts[2];
         String date = parts[3];
         String time = parts[4];
         String seatPart = parts[5];

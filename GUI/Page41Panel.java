@@ -18,8 +18,9 @@ public class Page41Panel extends JPanel {
         title.setForeground(Color.WHITE);
         add(title, BorderLayout.NORTH);
 
+        
         // ===== Center Panel (4 vertical cards side by side) =====
-        JPanel cardPanel = new JPanel(new GridLayout(1, 4, 20, 0));
+        JPanel cardPanel = new JPanel(new GridLayout(1, 4, 20, 0)); // ที่ทำแบ่ง4ช่องให้4set
         cardPanel.setBackground(Color.BLACK);
 
         cardPanel.add(createAddOnCard("Set 1", "300 THB", "Set1.png", new Color(0, 90, 200)));

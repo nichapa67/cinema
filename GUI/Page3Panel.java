@@ -35,7 +35,7 @@ public class Page3Panel extends JPanel {
         JPanel leftPanel = new JPanel(new BorderLayout());
         leftPanel.setBackground(Color.BLACK);
 
-        // Legend
+        // Legend ที่บอกสีที่นั่ง
         JPanel legendPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 10));
         legendPanel.setBackground(Color.BLACK);
 
@@ -157,14 +157,27 @@ public class Page3Panel extends JPanel {
         continueButton.setBackground(Color.BLUE);
         continueButton.setForeground(Color.WHITE);
         continueButton.addActionListener(e -> {
-            // เก็บข้อมูลที่เลือกลง session ก่อน
-            ArrayList<String> seatList = new ArrayList<>();
-            for (JButton btn : selectedSeats) {
-                seatList.add(btn.getText());
-            }
-            app.getBookingSession().setSeats(seatList);   // เก็บที่นั่ง
-            app.getBookingSession().setTotalPrice(getTotalPrice()); // เก็บราคา
-            app.showPage4(); // ไปหน้า 4
+        // ถ้าไม่ได้เลือกที่นั่งเลย
+        if (selectedSeats.isEmpty()) {
+            JOptionPane.showMessageDialog(
+                this,
+                "Please choose seat.",
+                "Warning",
+                JOptionPane.WARNING_MESSAGE
+            );
+            return; // ไม่ให้ไปต่อ
+        }
+
+        // เก็บข้อมูลที่เลือกลง session
+        ArrayList<String> seatList = new ArrayList<>();
+        for (JButton btn : selectedSeats) {
+            seatList.add(btn.getText());
+        }
+        app.getBookingSession().setSeats(seatList);    // เก็บที่นั่ง
+        app.getBookingSession().setSeatPrice(getSeatPrice()); // เก็บราคาที่นั่ง
+
+        // ไปหน้า 4
+        app.showPage4();
         });
 
         bottomPanel.add(backButton, BorderLayout.WEST);
@@ -185,7 +198,7 @@ public class Page3Panel extends JPanel {
             selectedSeats.remove(btn);
         } else {
             // select
-            btn.setBackground(Color.BLUE);
+            btn.setBackground(new Color(30, 144, 255)); // Dodger Blue;
             selectedSeats.add(btn);
         }
         updateInfo();
@@ -209,7 +222,8 @@ public class Page3Panel extends JPanel {
         totalLabel.setText("Total: " + total + " THB");
     }
 
-    private int getTotalPrice() {
+    // เก็บเฉพาะราคาที่นั่ง (ไม่รวม Add-on)
+    private int getSeatPrice() {
         int total = 0;
         for (JButton btn : selectedSeats) {
             if (btn.getText().startsWith("A")) {

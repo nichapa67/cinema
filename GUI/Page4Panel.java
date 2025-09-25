@@ -22,7 +22,9 @@ public class Page4Panel extends JPanel {
         totalLabel.setFont(new Font("SansSerif", Font.BOLD, 40));
         totalLabel.setForeground(Color.WHITE);
 
-        JLabel priceLabel = new JLabel(session.getTotalPrice() + " THB");
+        //บอกเฉพาะราคาที่นั่ง ไม่รวม Add-on
+        //JLabel priceLabel = new JLabel(session.getTotalPrice() + " THB");
+        JLabel priceLabel = new JLabel(session.getSeatPrice() + " THB");
         priceLabel.setFont(new Font("SansSerif", Font.BOLD, 40));
         priceLabel.setForeground(Color.WHITE);
         priceLabel.setBorder(new LineBorder(Color.GRAY, 3));
@@ -55,6 +57,7 @@ public class Page4Panel extends JPanel {
             moviePhoto.setText("Movie Photo");
             moviePhoto.setForeground(Color.WHITE);
         }
+
         leftPanel.add(moviePhoto); // GridBagLayout จะ center ให้อัตโนมัติ
         centerPanel.add(leftPanel);
 
@@ -69,7 +72,7 @@ public class Page4Panel extends JPanel {
         infoPanel.setMaximumSize(new Dimension(380, 400));
         infoPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // labels (ชิดซ้าย แต่กล่องรวมอยู่ตรงกลาง)
+        // labels ชิดซ้าย แต่กล่องรวมอยู่ตรงกลาง
         JLabel nameLabel = makeInfoLabel("Name: " + nonNull(session.getMovieName()));
         JLabel dateLabel = makeInfoLabel("Date: " + nonNull(session.getDate()));
         JLabel timeLabel = makeInfoLabel("Time: " + nonNull(session.getTime()));
@@ -137,7 +140,11 @@ public class Page4Panel extends JPanel {
         continueButton.setForeground(Color.WHITE);
         continueButton.setPreferredSize(new Dimension(140, 46));
         continueButton.setFocusPainted(false);
-        continueButton.addActionListener(e -> app.showPage5("Page4Panel"));
+        continueButton.addActionListener(e -> {
+        // เคลียร์ Add-on ถ้าผู้ใช้กด Continue จาก Page4 โดยไม่เลือก Add-on
+        app.getBookingSession().clearAddon();
+        app.showPage5("Page4Panel");
+        });
 
         bottomPanel.add(backButton, BorderLayout.WEST);
         bottomPanel.add(continueButton, BorderLayout.EAST);

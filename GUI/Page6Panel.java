@@ -1,9 +1,9 @@
 package GUI;
 
-import Class.BookingSession;
-
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import Class.BookingSession;
 
 public class Page6Panel extends JPanel {
     public CinemaApp app;
@@ -16,79 +16,99 @@ public class Page6Panel extends JPanel {
         setLayout(new BorderLayout());
         setBackground(Color.BLACK);
 
-        // ===== Title =====
-        JLabel title = new JLabel("Thank you!", SwingConstants.CENTER);
-        title.setFont(new Font("Arial", Font.BOLD, 22));
-        title.setForeground(Color.WHITE);
-        add(title, BorderLayout.NORTH);
+        // ===== TOP =====
+        JPanel topPanel = new JPanel();
+        topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
+        topPanel.setBackground(Color.BLACK);
+        topPanel.setBorder(new EmptyBorder(20, 20, 10, 20)); // ลดช่องว่างลง
 
-        // ===== Content =====
-        JPanel contentPanel = new JPanel();
-        contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
-        contentPanel.setBackground(Color.BLACK);
+        JLabel thankLabel = new JLabel("Thank you!", SwingConstants.CENTER);
+        thankLabel.setFont(new Font("SansSerif", Font.BOLD, 50));
+        thankLabel.setForeground(Color.WHITE);
+        thankLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // แสดงข้อมูลการจอง
-        JLabel movieLabel = new JLabel("Movie: " + session.getMovieName());
-        movieLabel.setForeground(Color.WHITE);
+        JLabel noteLabel = new JLabel("Please screenshot to bring Booking ID to counter.", SwingConstants.CENTER);
+        noteLabel.setFont(new Font("SansSerif", Font.BOLD, 22));
+        noteLabel.setForeground(Color.RED);
+        noteLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JLabel dateTimeLabel = new JLabel("Date: " + session.getDate() + "   Time: " + session.getTime());
-        dateTimeLabel.setForeground(Color.WHITE);
+        // ขยับให้ noteLabel อยู่ใกล้เส้นขาวมากขึ้น
+        topPanel.add(thankLabel);
+        topPanel.add(Box.createVerticalStrut(10));
+        topPanel.add(noteLabel);
 
-        JLabel seatsLabel = new JLabel("Seats: " + String.join(", ", session.getSelectedSeats()));
-        seatsLabel.setForeground(Color.WHITE);
+        add(topPanel, BorderLayout.NORTH);
 
-        JLabel mobileLabel = new JLabel("Mobile: " + session.getMobile());
-        mobileLabel.setForeground(Color.WHITE);
+        // ===== CENTER =====
+        JPanel centerPanel = new JPanel();
+        centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
+        centerPanel.setBackground(Color.BLACK);
+        centerPanel.setBorder(new EmptyBorder(10, 100, 20, 100));
 
-        JLabel bookingIdLabel = new JLabel("Booking ID: " + session.getBookingID());
-        bookingIdLabel.setForeground(Color.WHITE);
+        JSeparator separator = new JSeparator(SwingConstants.HORIZONTAL);
+        separator.setForeground(Color.WHITE);
+        separator.setBackground(Color.WHITE);
+        separator.setPreferredSize(new Dimension(0, 3));
+        centerPanel.add(separator);
+        centerPanel.add(Box.createVerticalStrut(30));
 
-        // ===== Movie Poster =====
-        JLabel moviePhoto = new JLabel();
-        moviePhoto.setAlignmentX(Component.CENTER_ALIGNMENT);
+        // ข้อมูลการจอง
+        centerPanel.add(makeInfoLabel("Booking ID: " + safe(session.getBookingID())));
+        centerPanel.add(Box.createVerticalStrut(20));
 
-        if (session.getMovieImage() != null) {
-            ImageIcon icon = new ImageIcon(session.getMovieImage()); // String → ImageIcon
-            Image scaled = icon.getImage().getScaledInstance(200, 300, Image.SCALE_SMOOTH);
-            moviePhoto.setIcon(new ImageIcon(scaled));
-        } else {
-            moviePhoto.setText("No Image");
-            moviePhoto.setForeground(Color.WHITE);
-        }
+        // Movie name
+        centerPanel.add(makeInfoLabel("Name: " + safe(session.getMovieName())));
+        centerPanel.add(Box.createVerticalStrut(20));
 
-        // จัดให้อยู่ตรงกลาง
-        movieLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        dateTimeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        seatsLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        mobileLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        bookingIdLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        // Date
+        centerPanel.add(makeInfoLabel("Date: " + safe(session.getDate())));
+        centerPanel.add(Box.createVerticalStrut(20));
 
-        // เพิ่มลง panel
-        contentPanel.add(Box.createRigidArea(new Dimension(0, 15)));
-        contentPanel.add(moviePhoto);
-        contentPanel.add(Box.createRigidArea(new Dimension(0, 15)));
-        contentPanel.add(movieLabel);
-        contentPanel.add(dateTimeLabel);
-        contentPanel.add(seatsLabel);
-        contentPanel.add(mobileLabel);
-        contentPanel.add(bookingIdLabel);
+        // Time
+        centerPanel.add(makeInfoLabel("Time: " + safe(session.getTime())));
+        centerPanel.add(Box.createVerticalStrut(20));
 
-        add(contentPanel, BorderLayout.CENTER);
+        // Seats
+        String seats = session.getSelectedSeats().isEmpty() ? "-" : String.join(", ", session.getSelectedSeats());
+        centerPanel.add(makeInfoLabel("Seat: " + seats));
+        centerPanel.add(Box.createVerticalStrut(20));
 
-        // ===== Button Home =====
+        // Add on
+        String addon = (session.getSelectedAddonName() == null) ? "-" : session.getSelectedAddonName();
+        centerPanel.add(makeInfoLabel("Add on: " + addon));
+        centerPanel.add(Box.createVerticalGlue());
+
+        add(centerPanel, BorderLayout.CENTER);
+
+        // ===== BOTTOM Home =====
+        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        bottomPanel.setBackground(Color.BLACK);
+        bottomPanel.setBorder(new EmptyBorder(10, 20, 30, 20));
+
         JButton homeButton = new JButton("Home");
+        homeButton.setFont(new Font("SansSerif", Font.BOLD, 22));
         homeButton.setBackground(Color.BLUE);
         homeButton.setForeground(Color.WHITE);
-        homeButton.setFocusPainted(false);
+        homeButton.setPreferredSize(new Dimension(150, 55));
+
         homeButton.addActionListener(e -> {
-            session.resetSession(); // รีเซ็ตข้อมูลเก่า
-            app.showPage1();       // กลับไปหน้าแรก
+            session.resetSession();
+            app.showPage1();
         });
 
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setBackground(Color.BLACK);
-        buttonPanel.add(homeButton);
+        bottomPanel.add(homeButton);
+        add(bottomPanel, BorderLayout.SOUTH);
+    }
 
-        add(buttonPanel, BorderLayout.SOUTH);
+    private JLabel makeInfoLabel(String text) {
+        JLabel label = new JLabel(text);
+        label.setFont(new Font("SansSerif", Font.BOLD, 26));
+        label.setForeground(Color.WHITE);
+        return label;
+    }
+
+    // แสดง "-" ถ้า null หรือ empty ในAddon
+    private String safe(String value) {
+        return (value == null || value.isEmpty()) ? "-" : value;
     }
 }
