@@ -19,8 +19,13 @@ public class DataStore {
                     pw.println("Movie 4");
                     pw.println("Movie 5");
                     pw.println("Movie 6");
+                    pw.println("Movie 7");
+                    pw.println("Movie 8");
+                    pw.println("Movie 9");
+                    pw.println("Movie 10");
                 }
             }
+
             File f2 = new File(SETS_FILE);
             if (!f2.exists()){
                 try (PrintWriter pw = new PrintWriter(new FileWriter(f2))){
@@ -30,6 +35,7 @@ public class DataStore {
                     pw.println("Set4,300");
                 }
             }
+
             File f3 = new File(BOOKINGS_FILE);
             if (!f3.exists()){
                 f3.createNewFile();
@@ -39,6 +45,7 @@ public class DataStore {
         }
     }
 
+    // โหลดรายการหนัง
     public static List<Movie> loadMovies(){
         List<Movie> list = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(MOVIES_FILE))){
@@ -53,12 +60,14 @@ public class DataStore {
         return list;
     }
 
+    // บันทึกรายการหนัง
     public static void saveMovies(List<Movie> movies){
         try (PrintWriter pw = new PrintWriter(new FileWriter(MOVIES_FILE))){
             for (Movie m : movies) pw.println(m.getName());
         } catch (Exception e){ e.printStackTrace(); }
     }
 
+    // โหลดชุดอาหาร
     public static List<SetItem> loadSets(){
         List<SetItem> list = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(SETS_FILE))){
@@ -78,12 +87,14 @@ public class DataStore {
         return list;
     }
 
+    // บันทึกชุดอาหาร
     public static void saveSets(List<SetItem> sets){
         try (PrintWriter pw = new PrintWriter(new FileWriter(SETS_FILE))){
             for (SetItem s : sets) pw.println(s.getName() + "," + s.getPrice());
         } catch (Exception e){ e.printStackTrace(); }
     }
 
+    // โหลดข้อมูลการจองทั้งหมด
     public static List<Booking> loadBookings(){
         List<Booking> list = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(BOOKINGS_FILE))){
@@ -98,22 +109,50 @@ public class DataStore {
         return list;
     }
 
+    // เพิ่มการจองใหม่ลงไฟล์
     public static synchronized void addBooking(Booking b){
         try (PrintWriter pw = new PrintWriter(new FileWriter(BOOKINGS_FILE, true))){
             pw.println(b.toCSV());
         } catch (Exception e){ e.printStackTrace(); }
     }
 
-    // helper: check if seat is taken for given movie,date,time
+    // ตรวจสอบว่าที่นั่งนี้ถูกจองหรือยัง สำหรับหนัง / วันที่ / เวลา ที่กำหนด
     public static boolean isSeatBooked(String movie, String date, String time, String seatId){
-        List<Booking> bs = loadBookings();
-        for (Booking b : bs){
-            if (b.getMovieName().equals(movie) && b.getDate().equals(date) && b.getTime().equals(time)){
-                for (String s : b.getSeats()){
-                    if (s.equalsIgnoreCase(seatId)) return true;
+        List<Booking> bookings = loadBookings();
+        for (Booking b : bookings){
+            if (b.getMovieName().equalsIgnoreCase(movie)
+                    && b.getDate().equalsIgnoreCase(date)
+                    && b.getTime().equalsIgnoreCase(time)) {
+                for (String seat : b.getSeats()){
+                    if (seat.equalsIgnoreCase(seatId)){
+                        return true;
+                    }
                 }
             }
         }
         return false;
+    }
+
+    // ดึงที่นั่งทั้งหมดที่ถูกจองแล้ว สำหรับหนัง / วันที่ / เวลา ที่กำหนด
+    public static Set<String> getBookedSeats(String movie, String date, String time) {
+        Set<String> booked = new HashSet<>();
+        List<Booking> bookings = loadBookings();
+        for (Booking b : bookings){
+            if (b.getMovieName().equalsIgnoreCase(movie)
+                    && b.getDate().equalsIgnoreCase(date)
+                    && b.getTime().equalsIgnoreCase(time)) {
+                booked.addAll(b.getSeats());
+            }
+        }
+        return booked;
+    }
+
+    // เขียนทับ bookings ใหม่ทั้งหมด (กรณีต้องการลบ/อัปเดต)
+    public static void saveBookings(List<Booking> bookings){
+        try (PrintWriter pw = new PrintWriter(new FileWriter(BOOKINGS_FILE))){
+            for (Booking b : bookings){
+                pw.println(b.toCSV());
+            }
+        } catch (Exception e){ e.printStackTrace(); }
     }
 }

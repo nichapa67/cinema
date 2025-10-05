@@ -117,13 +117,47 @@ public class BookingSession {
         bookingID = null;
     }
 
+    
     // ===== Mobile =====
     public void setMobile(String mobile) { this.mobile = mobile; }
     public String getMobile() { return mobile; }
 
     // ===== Booking ID =====
+    // เมท็อดนี้จะถูกเรียกใน Page5 หรือ Page6 ก่อนบันทึกการจอง
+    public String generateBookingID() {
+        if (mobile == null || date == null || time == null) {
+            return null; // ข้อมูลไม่ครบ
+        }
+        
+        // ตัวอย่างข้อมูล:
+        // mobile = 0867753888
+        // date = 20/09/2025
+        // time = 12:00
+        
+        // 1. ดึงเดือน (MM) และ วัน (dd) จาก date (dd/MM/yyyy)
+        // ต้องมั่นใจว่า date มี format เป็น dd/MM/yyyy
+        String[] dateParts = date.split("/");
+        String day = dateParts[0]; // "20"
+        String month = dateParts[1]; // "09"
+        
+        // 2. ดึงชั่วโมง (HH) และนาที (mm) จาก time (HH:mm)
+        String[] timeParts = time.split(":");
+        String hour = timeParts[0]; // "12"
+        String minute = timeParts[1]; // "00"
+        
+        // 3. รวมกัน: Mobile + Month + Day + Hour + Minute
+        // ผลลัพธ์: 0867753888 + 09 + 20 + 12 + 00 = "086775388809201200"
+        String id = mobile + month + day + hour + minute;
+        
+        // บันทึก ID ที่สร้างขึ้นใน session
+        this.bookingID = id;
+        return id;
+    }
+    
     public void setBookingID(String bookingID) { this.bookingID = bookingID; }
     public String getBookingID() { return bookingID; }
+
+
 
     // ===== Debug =====
     @Override

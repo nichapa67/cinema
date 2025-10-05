@@ -1,15 +1,21 @@
 package GUI;
+import Class.*;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
-import java.util.ArrayList;
+import java.util.*;
+
 
 public class Page3Panel extends JPanel {
     private ArrayList<JButton> selectedSeats = new ArrayList<>();
     private JLabel seatLabel;
     private JLabel totalLabel;
-
     public CinemaApp app;
+    private Map<JButton, String> seatTypeMap = new HashMap<>();
+
+    ImageIcon normalIcon = new ImageIcon("Picture/Normal.png");
+    ImageIcon vipIcon = new ImageIcon("Picture/VIP.png");
+    ImageIcon correctIcon = new ImageIcon("Picture/Correct.png");
+    ImageIcon alreadyIcon = new ImageIcon("Picture/Already.png");
 
     public Page3Panel(CinemaApp app) {
         this.app = app;
@@ -18,56 +24,53 @@ public class Page3Panel extends JPanel {
         setBackground(Color.BLACK);
 
         // ดึงข้อมูลจาก session
+        String movie = app.getBookingSession().getMovieName();
         String date = app.getBookingSession().getDate();
         String time = app.getBookingSession().getTime();
 
-        // Title 
+        // ที่นั่งที่จองแล้วจากไฟล์
+        Set<String> bookedSeats = DataStore.getBookedSeats(movie, date, time);
+
+        // Title
         JLabel title = new JLabel("Choose Seat", JLabel.CENTER);
         title.setFont(new Font("SansSerif", Font.BOLD, 36));
         title.setForeground(Color.WHITE);
         add(title, BorderLayout.NORTH);
 
-        // Center Content (Left = Seats, Right = Info) 
+        // Center Content
         JPanel centerPanel = new JPanel(new BorderLayout());
         centerPanel.setBackground(Color.BLACK);
 
-        //  Left Side
+        // Left Side
         JPanel leftPanel = new JPanel(new BorderLayout());
         leftPanel.setBackground(Color.BLACK);
 
-        // Legend ที่บอกสีที่นั่ง
+        // Legend
         JPanel legendPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 10));
         legendPanel.setBackground(Color.BLACK);
 
-        JPanel grayBox = new JPanel();
-        grayBox.setBackground(Color.GRAY);
-        grayBox.setPreferredSize(new Dimension(20, 20));
-        JLabel grayLabel = new JLabel("120 THB");
-        grayLabel.setForeground(Color.WHITE);
+        JLabel normalLegend = new JLabel("Normal 120 THB", normalIcon, JLabel.LEFT);
+        Image normal = normalIcon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+        normalLegend.setIcon(new ImageIcon(normal));
+        normalLegend.setForeground(Color.WHITE);
 
-        JPanel yellowBox = new JPanel();
-        yellowBox.setBackground(Color.YELLOW);
-        yellowBox.setPreferredSize(new Dimension(20, 20));
-        JLabel yellowLabel = new JLabel("200 THB");
-        yellowLabel.setForeground(Color.WHITE);
+        JLabel vipLegend = new JLabel("VIP 200 THB", vipIcon, JLabel.LEFT);
+        Image vip = vipIcon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+        vipLegend.setIcon(new ImageIcon(vip));
+        vipLegend.setForeground(Color.WHITE);
 
-        legendPanel.add(grayBox);
-        legendPanel.add(grayLabel);
-        legendPanel.add(yellowBox);
-        legendPanel.add(yellowLabel);
-
+        legendPanel.add(normalLegend);
+        legendPanel.add(vipLegend);
         leftPanel.add(legendPanel, BorderLayout.NORTH);
 
-        // Seats and Screen
-        JPanel seatArea = new JPanel(new BorderLayout());
-        seatArea.setBackground(Color.BLACK);
-
-        // Screen with curve
+        // Screen
         JPanel screenPanel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
+                Graphics2D g2 = (Graphics2D) g;
                 g.setColor(Color.WHITE);
+                g2.setStroke(new BasicStroke(4));
                 g.drawArc(50, 10, getWidth() - 100, 80, 0, 180);
                 g.setFont(new Font("SansSerif", Font.BOLD, 16));
                 g.drawString("SCREEN", getWidth() / 2 - 40, 70);
@@ -75,43 +78,57 @@ public class Page3Panel extends JPanel {
         };
         screenPanel.setBackground(Color.BLACK);
         screenPanel.setPreferredSize(new Dimension(0, 100));
-        seatArea.add(screenPanel, BorderLayout.NORTH);
 
-        // Seats Grid
-        JPanel seatsPanel = new JPanel(new GridLayout(4, 10, 5, 5));
+        // Seats grid
+        JPanel seatsPanel = new JPanel(new GridLayout(6, 10, 5, 5));
         seatsPanel.setBackground(Color.BLACK);
 
-        String[] rows = {"D", "C", "B", "A"};
+        String[] rows = {"F", "E", "D", "C", "B", "A"};
         for (String row : rows) {
-            for (int i = 1; i <= 10; i++) {
+            for (int i = 1; i <= 12; i++) {
                 String seatName = row + i;
-                JButton seatBtn = new JButton(seatName);
+                JButton seatBtn = new JButton(seatName, null);
+                seatBtn.setHorizontalTextPosition(SwingConstants.CENTER);
+                seatBtn.setVerticalTextPosition(SwingConstants.CENTER);
+                seatBtn.setContentAreaFilled(false);
+                seatBtn.setBorderPainted(false);
                 seatBtn.setFocusPainted(false);
-                seatBtn.setForeground(Color.BLACK);
+                seatBtn.setFont(new Font("SansSerif", Font.BOLD, 12));
+                seatBtn.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
 
-                if (row.equals("A")) {
-                    seatBtn.setBackground(Color.YELLOW); // 200 THB
+                // ตรวจสอบสถานะที่นั่ง
+                if (bookedSeats.contains(seatName)) {
+                    seatBtn.setIcon(alreadyIcon);
+                    Image img = alreadyIcon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+                    seatBtn.setIcon(new ImageIcon(img));
+
+                    seatBtn.setEnabled(false);
+                } else if (row.equals("A")) {
+                    seatBtn.setIcon(vipIcon);
+                    Image img = vipIcon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+                    seatBtn.setIcon(new ImageIcon(img));
+                    seatTypeMap.put(seatBtn, "VIP");
                 } else {
-                    seatBtn.setBackground(Color.GRAY); // 120 THB
+                    seatBtn.setIcon(normalIcon);
+                    Image img = normalIcon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+                    seatBtn.setIcon(new ImageIcon(img));
+                    seatTypeMap.put(seatBtn, "Normal");
                 }
 
-                seatBtn.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        toggleSeat(seatBtn);
-                    }
-                });
-
+                seatBtn.addActionListener(e -> toggleSeat(seatBtn));
                 seatsPanel.add(seatBtn);
             }
         }
 
+        JPanel seatArea = new JPanel(new BorderLayout());
+        seatArea.setBackground(Color.BLACK);
+        seatArea.add(screenPanel, BorderLayout.NORTH);
         seatArea.add(seatsPanel, BorderLayout.CENTER);
         leftPanel.add(seatArea, BorderLayout.CENTER);
 
-        // ===== Right Side =====
+        // Right side
         JPanel rightPanel = new JPanel();
-        rightPanel.setPreferredSize(new Dimension(250, 0)); 
+        rightPanel.setPreferredSize(new Dimension(250, 0));
         rightPanel.setBackground(Color.WHITE);
         rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
         rightPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
@@ -137,14 +154,11 @@ public class Page3Panel extends JPanel {
         rightPanel.add(Box.createVerticalStrut(20));
         rightPanel.add(totalLabel);
 
-        
         centerPanel.add(leftPanel, BorderLayout.CENTER);
         centerPanel.add(rightPanel, BorderLayout.EAST);
-
-
         add(centerPanel, BorderLayout.CENTER);
 
-        // ===== Bottom Buttons =====
+        // Bottom buttons
         JPanel bottomPanel = new JPanel(new BorderLayout());
         bottomPanel.setBackground(Color.BLACK);
 
@@ -157,80 +171,73 @@ public class Page3Panel extends JPanel {
         continueButton.setBackground(Color.BLUE);
         continueButton.setForeground(Color.WHITE);
         continueButton.addActionListener(e -> {
-        // ถ้าไม่ได้เลือกที่นั่งเลย
-        if (selectedSeats.isEmpty()) {
-            JOptionPane.showMessageDialog(
-                this,
-                "Please choose seat.",
-                "Warning",
-                JOptionPane.WARNING_MESSAGE
-            );
-            return; // ไม่ให้ไปต่อ
-        }
+            if (selectedSeats.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Please choose seat.", "Warning", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
 
-        // เก็บข้อมูลที่เลือกลง session
-        ArrayList<String> seatList = new ArrayList<>();
-        for (JButton btn : selectedSeats) {
-            seatList.add(btn.getText());
-        }
-        app.getBookingSession().setSeats(seatList);    // เก็บที่นั่ง
-        app.getBookingSession().setSeatPrice(getSeatPrice()); // เก็บราคาที่นั่ง
+            ArrayList<String> seatList = new ArrayList<>();
+            for (JButton btn : selectedSeats) {
+                seatList.add(btn.getText());
+            }
 
-        // ไปหน้า 4
-        app.showPage4();
+            app.getBookingSession().setSeats(seatList);
+            app.getBookingSession().setSeatPrice(getSeatPrice());
+            app.showPage4();
         });
 
         bottomPanel.add(backButton, BorderLayout.WEST);
         bottomPanel.add(continueButton, BorderLayout.EAST);
-
         add(bottomPanel, BorderLayout.SOUTH);
     }
 
-    // ===== Toggle Seat Selection =====
+    // Toggle seat select/deselect
     private void toggleSeat(JButton btn) {
         if (selectedSeats.contains(btn)) {
-            // deselect
-            if (btn.getText().startsWith("A")) {
-                btn.setBackground(Color.YELLOW);
+            // ยกเลิกเลือก
+            String type = seatTypeMap.get(btn);
+            if ("VIP".equals(type)) {
+                btn.setIcon(vipIcon);
+                Image img = vipIcon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+                btn.setIcon(new ImageIcon(img));
             } else {
-                btn.setBackground(Color.GRAY);
+                btn.setIcon(normalIcon);
+                Image img = normalIcon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+                btn.setIcon(new ImageIcon(img));
             }
             selectedSeats.remove(btn);
         } else {
-            // select
-            btn.setBackground(new Color(30, 144, 255)); // Dodger Blue;
+            // เลือก
+            btn.setIcon(correctIcon);
+            Image img = correctIcon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+            btn.setIcon(new ImageIcon(img));
             selectedSeats.add(btn);
         }
         updateInfo();
     }
 
-    // ===== Update Info (Seat + Total) =====
+    // Update summary
     private void updateInfo() {
         StringBuilder seatNames = new StringBuilder();
         int total = 0;
 
         for (JButton btn : selectedSeats) {
             seatNames.append(btn.getText()).append(" ");
-            if (btn.getText().startsWith("A")) {
-                total += 200;
-            } else {
-                total += 120;
-            }
+            String type = seatTypeMap.get(btn);
+            if ("VIP".equals(type)) total += 200;
+            else total += 120;
         }
 
         seatLabel.setText("Seat: " + seatNames.toString().trim());
         totalLabel.setText("Total: " + total + " THB");
     }
 
-    // เก็บเฉพาะราคาที่นั่ง (ไม่รวม Add-on)
     private int getSeatPrice() {
         int total = 0;
         for (JButton btn : selectedSeats) {
-            if (btn.getText().startsWith("A")) {
-                total += 200;
-            } else {
-                total += 120;
-            }
+            String type = seatTypeMap.get(btn);
+            if ("VIP".equals(type)) total += 200;
+            else total += 120;
         }
         return total;
     }
