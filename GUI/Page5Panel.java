@@ -7,7 +7,7 @@ import Class.*;
 public class Page5Panel extends JPanel {
     public CinemaApp app;
     public String fromPage; 
-    private JTextField mobileField; // ช่องกรอกเบอร์มือถือ
+    private JTextField mobileField; 
 
     public Page5Panel(CinemaApp app, String fromPage) {
         this.app = app;
@@ -18,6 +18,8 @@ public class Page5Panel extends JPanel {
 
         BookingSession session = app.getBookingSession();
 
+        // [ส่วน GUI ด้านบน: title, form, total] 
+        // ... (โค้ดเดิม) ...
         // ===== MAIN CENTER PANEL (แนวตั้ง) =====
         JPanel centerPanel = new JPanel();
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
@@ -107,40 +109,29 @@ public class Page5Panel extends JPanel {
         confirmButton.addActionListener(e -> {
             String mobile = mobileField.getText().trim();
 
-            // ตรวจสอบเบอร์โทร
+            // 1. ตรวจสอบเบอร์โทร
             if (!mobile.matches("^0\\d{9}$")) {
                 JOptionPane.showMessageDialog(this,
-                        "Invalid Mobile Number.",
+                        "Invalid Mobile Number. Please enter a 10-digit number starting with 0.",
                         "Invalid", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
-            // เก็บค่าเบอร์โทรลง session
+            // 2. เก็บค่าเบอร์โทรลง session
             session.setMobile(mobile);
 
-            // ดึงวัน เดือน เวลา จาก session
-            String date = session.getDate();   // เช่น "20/09"
-            String time = session.getTime();   // เช่น "12:00"
+            // 3. สร้าง Booking ID และเก็บลง session (ใช้เมท็อดที่สร้างใหม่)
+            String bookingID = session.generateBookingID();
+            
+            // ตรวจสอบความถูกต้องของ ID ที่สร้าง
+            if (bookingID == null) {
+                 JOptionPane.showMessageDialog(this,
+                        "Error: Missing Date or Time information.",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
 
-            // แยกวันกับเดือน
-            String[] dateParts = date.split("/"); 
-            String day = dateParts[0];   // "20"
-            String month = dateParts[1]; // "09"
-
-            // เอาเวลาออก ":" เช่น "12:00" -> "1200"
-            String timeFormatted = time.replace(":", "");
-
-            // สร้าง Booking ID
-            String bookingID = mobile + day + month + timeFormatted;
-
-            // เก็บ Booking ID ลง session
-            session.setBookingID(bookingID);
-
-            // แสดงผล
-            JOptionPane.showMessageDialog(this,
-                    "You have successfully confirmed your order.\nBooking ID: " + bookingID,
-                    "Confirmation", JOptionPane.INFORMATION_MESSAGE);
-
+            // 4. ไปหน้า 6
             app.showPage6(session);
         });
 

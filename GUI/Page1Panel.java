@@ -15,10 +15,10 @@ public class Page1Panel extends JPanel {
         add(title, BorderLayout.NORTH);
 
         // ปุ่มเลือกหนัง
-        JPanel moviePanel = new JPanel(new GridLayout(2, 3, 15, 15));
+        JPanel moviePanel = new JPanel(new GridLayout(2, 4, 15, 15));
         moviePanel.setBackground(Color.BLACK);
 
-        for (int i = 1; i <= 6; i++) {
+        for (int i = 1; i <= 8; i++) {
             String movieName = "Movie" + i;
             JButton btn = new JButton();
 
@@ -29,6 +29,7 @@ public class Page1Panel extends JPanel {
 
             // ชื่อหนัง
             btn.setText(movieName);
+            btn.setFont(new Font("SansSerif", Font.BOLD, 16));
             btn.setHorizontalTextPosition(JButton.CENTER);
             btn.setVerticalTextPosition(JButton.BOTTOM);
 

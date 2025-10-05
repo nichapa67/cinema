@@ -2,7 +2,7 @@ package Class;
 import java.util.*;
 
 public class Booking {
-    private String phone;
+    private String mobile;
     private String movieName;
     private String movieImage; // เก็บชื่อไฟล์รูป
     private String date; // format dd/MM/yyyy
@@ -11,8 +11,8 @@ public class Booking {
     private String setName; // nullable
     
 
-    public Booking(String phone, String movieName, String movieImage, String date, String time, List<String> seats, String setName){
-        this.phone = phone;
+    public Booking(String mobile, String movieName, String movieImage, String date, String time, List<String> seats, String setName){
+        this.mobile = mobile;
         this.movieName = movieName;
         this.movieImage = movieImage;  
         this.date = date;
@@ -21,7 +21,8 @@ public class Booking {
         this.setName = setName;
     }
 
-    public String getPhone(){ return phone; }
+    // แก้ไข: เปลี่ยนชื่อเมท็อดจาก getmobile() เป็น getMobile()
+    public String getMobile(){ return mobile; }
     public String getMovieName(){ return movieName; }
     public String getMovieImage(){ return movieImage; }
     public String getDate(){ return date; }
@@ -29,12 +30,12 @@ public class Booking {
     public List<String> getSeats(){ return new ArrayList<>(seats); }
     public String getSetName(){ return setName; }
 
-    // CSV: phone,movie,movieImage,date,time,seat1;seat2;...,setName
+    // CSV: mobile,movie,movieImage,date,time,seat1;seat2;...,setName
     public String toCSV(){
         StringBuilder sb = new StringBuilder();
-        sb.append(phone).append(",");
+        sb.append(mobile).append(",");
         sb.append(movieName.replace(",", " ")).append(",");
-        sb.append(movieImage==null?"":movieImage.replace(",", " ")).append(","); // << new
+        sb.append(movieImage==null?"":movieImage.replace(",", " ")).append(","); 
         sb.append(date).append(",");
         sb.append(time).append(",");
         for (int i=0;i<seats.size();i++){
@@ -48,8 +49,8 @@ public class Booking {
 
     public static Booking fromCSV(String line){
         String[] parts = line.split(",", -1);
-        if (parts.length < 7) return null; // เพิ่ม movieImage เป็น column 3
-        String phone = parts[0];
+        if (parts.length < 7) return null; 
+        String mobile = parts[0];
         String movie = parts[1];
         String movieImage = parts[2];
         String date = parts[3];
@@ -63,6 +64,6 @@ public class Booking {
             for (String ss: s) seats.add(ss.trim());
         }
 
-        return new Booking(phone, movie, movieImage, date, time, seats, setName);
+        return new Booking(mobile, movie, movieImage, date, time, seats, setName);
     }
 }

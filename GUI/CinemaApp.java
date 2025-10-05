@@ -8,7 +8,8 @@ public class CinemaApp extends JFrame {
 
     public CinemaApp() {
         setTitle("Cinema Ticket Booking");
-        setSize(900, 700);
+        //setSize(900, 700);
+        setSize(1024, 768);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         bookingSession = new BookingSession(); // เก็บค่า booking ทั้งหมด
