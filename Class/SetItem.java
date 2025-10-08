@@ -1,16 +1,29 @@
 package Class;
+
 public class SetItem {
     private String name;
     private int price;
+    private String imagePath; // เพิ่มฟิลด์ใหม่
 
-    public SetItem(String name, int price) {
+    // Constructor ใหม่ (3 พารามิเตอร์)
+    public SetItem(String name, int price, String imagePath) {
         this.name = name;
         this.price = price;
+        this.imagePath = imagePath;
+    }
+
+    // Constructor เดิม (เผื่อโค้ดอื่นเรียกใช้)
+    public SetItem(String name, int price) {
+        this(name, price, null);
     }
 
     public String getName() { return name; }
     public int getPrice() { return price; }
 
+    // Getter สำหรับ path ของรูป
+    public String getImagePath() { return imagePath; }
+
+    @Override
     public String toString() {
         return name + " (" + price + " THB)";
     }

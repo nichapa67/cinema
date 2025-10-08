@@ -67,7 +67,7 @@ public class DataStore {
         } catch (Exception e){ e.printStackTrace(); }
     }
 
-    // โหลดชุดอาหาร
+    /*// โหลดชุดอาหาร
     public static List<SetItem> loadSets(){
         List<SetItem> list = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(SETS_FILE))){
@@ -85,7 +85,36 @@ public class DataStore {
             }
         } catch (Exception e){ e.printStackTrace(); }
         return list;
+    }*/
+
+    // โหลดชุดอาหาร
+    public static List<SetItem> loadSets() {
+        List<SetItem> list = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(SETS_FILE))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                line = line.trim();
+                if (line.isEmpty()) continue;
+
+                String[] p = line.split(",", 2);
+                if (p.length < 2) continue;
+
+                String imagePath = p[0].trim(); // เช่น Picture/addon/Set LOTTE.png
+                int price = Integer.parseInt(p[1].trim());
+
+                // ดึงชื่อจากไฟล์ เช่น Set LOTTE
+                String fileName = new File(imagePath).getName(); 
+                String name = fileName.replace("Set ", "").replace(".png", ""); 
+
+                // new SetItem(name, price, imagePath) → สมมติว่า SetItem รองรับ 3 พารามิเตอร์
+                list.add(new SetItem(name, price, imagePath));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
     }
+
 
     // บันทึกชุดอาหาร
     public static void saveSets(List<SetItem> sets){
