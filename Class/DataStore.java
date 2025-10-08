@@ -67,7 +67,7 @@ public class DataStore {
         } catch (Exception e){ e.printStackTrace(); }
     }
 
-    // โหลดชุดอาหาร
+    /*// โหลดชุดอาหาร
     public static List<SetItem> loadSets(){
         List<SetItem> list = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(SETS_FILE))){
@@ -85,7 +85,32 @@ public class DataStore {
             }
         } catch (Exception e){ e.printStackTrace(); }
         return list;
+    }*/
+
+    // โหลดชุดอาหาร
+    public static List<SetItem> loadSets() {
+        List<SetItem> list = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(SETS_FILE))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                line = line.trim();
+                if (line.isEmpty()) continue;
+                String[] p = line.split(",", 3); // แยกเป็น 3 ส่วน: ชื่อ, รูป, ราคา
+                if (p.length < 3) continue;
+
+                String name = p[0].trim();
+                String imagePath = p[1].trim();
+                int price = 0;
+                try { price = Integer.parseInt(p[2].trim()); } catch (Exception e) {}
+
+                list.add(new SetItem(name, imagePath, price));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
     }
+
 
     // บันทึกชุดอาหาร
     public static void saveSets(List<SetItem> sets){
