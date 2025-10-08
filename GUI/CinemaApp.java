@@ -9,7 +9,7 @@ public class CinemaApp extends JFrame {
     public CinemaApp() {
         setTitle("Cinema Ticket Booking");
         //setSize(900, 700);
-        setSize(1024, 768);
+        setSize(1150, 768);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         bookingSession = new BookingSession(); // เก็บค่า booking ทั้งหมด
@@ -44,17 +44,19 @@ public class CinemaApp extends JFrame {
     }
 
     // ไปหน้าเลือกที่นั่ง (Page3)
-    public void showPage3(String date, String time) {
+    public void showPage3(String movieName, String movieImage, String date, String time) {
+        bookingSession.setMovieName(movieName);
+        bookingSession.setMovieImage(movieImage);
         bookingSession.setDate(date);
         bookingSession.setTime(time);
-        setContentPane(new Page3Panel(this)); 
+        setContentPane(new Page3Panel(this, movieName, movieImage)); 
         revalidate();
         repaint();
     }
 
     // กลับไปหน้า 3 อีกครั้ง โดยใช้ค่าจาก session
     public void showPage3() {
-        setContentPane(new Page3Panel(this));
+        setContentPane(new Page3Panel(this, bookingSession.getMovieName(), bookingSession.getMovieImage()));
         revalidate();
         repaint();
     }

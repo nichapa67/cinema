@@ -1,8 +1,10 @@
 package GUI;
-import javax.swing.*;
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
-
+import javax.imageio.ImageIO;
+import javax.swing.*;
 
 public class Page2Panel extends JPanel {
     private String selectedDate = null;
@@ -10,56 +12,104 @@ public class Page2Panel extends JPanel {
 
     private java.util.List<JButton> dateButtons = new ArrayList<>(); // เก็บปุ่มวันที่ทั้งหมด
     private java.util.List<JButton> timeButtons = new ArrayList<>(); // เก็บปุ่มเวลาทั้งหมด
+    private Image backgroundImage;
 
     public Page2Panel(CinemaApp app, String movieName, String movieImage) {
+        
         setLayout(new BorderLayout(15, 15));
-        setBackground(Color.BLACK);
-        setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+   
+
+        //ภาพพื้นหลัง
+        try {
+            backgroundImage = ImageIO.read(new File("Picture/bg/" + movieName + ".jpg"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         // Title 
         JLabel title = new JLabel("Choose Date and Time", JLabel.CENTER);
-        title.setFont(new Font("SansSerif", Font.BOLD, 36));
+        title.setFont(new Font("Arial Rounded MT Bold", Font.BOLD, 36));
         title.setForeground(Color.WHITE);
         add(title, BorderLayout.NORTH);
 
         // Content
         JPanel contentPanel = new JPanel(new GridLayout(1, 2, 20, 0));
-        contentPanel.setBackground(Color.BLACK);
+        contentPanel.setOpaque(false); // ให้โปร่งใส
 
-        // ซ้าย: รูปหนัง + ชื่อหนัง
+        // ซ้าย: รูปหนัง 
         JPanel leftPanel = new JPanel(new BorderLayout());
-        leftPanel.setBackground(Color.BLACK);
-
-        // ชื่อหนัง
-        JLabel movieLabel = new JLabel(movieName, JLabel.CENTER);
-        movieLabel.setFont(new Font("SansSerif", Font.PLAIN, 24));
-        movieLabel.setForeground(Color.WHITE);
-        leftPanel.add(movieLabel, BorderLayout.NORTH);
+        leftPanel.setOpaque(false); // ให้โปร่งใส
 
         // รูปหนัง
         ImageIcon icon = new ImageIcon("Picture/" + movieImage);
-        Image img = icon.getImage().getScaledInstance(325, 450, Image.SCALE_SMOOTH);
+        Image img = icon.getImage().getScaledInstance(280, 400, Image.SCALE_SMOOTH);
         JLabel moviePoster = new JLabel(new ImageIcon(img));
         leftPanel.add(moviePoster, BorderLayout.CENTER);
 
         contentPanel.add(leftPanel);
 
+        title.setBorder(BorderFactory.createEmptyBorder(35, 50, 10, 0)); 
 
-        // ขวา: Date + Time
+       // rightPanel: ตั้ง layout เป็นแนวตั้ง
         JPanel rightPanel = new JPanel();
-        rightPanel.setBackground(Color.BLACK);
+        rightPanel.setOpaque(false);
         rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
 
-        // Date label
+        rightPanel.setBorder(BorderFactory.createEmptyBorder(60, 0, 50, 0));
+
+
+        // ชื่อหนัง
+        JLabel movieLabel = new JLabel(movieName);
+        movieLabel.setFont(new Font("Arial Rounded MT Bold", Font.BOLD, 30));
+        movieLabel.setForeground(Color.WHITE);
+        movieLabel.setAlignmentX(Component.LEFT_ALIGNMENT); // ชิดซ้าย
+
+        // Panel สำหรับชื่อหนังและเส้นแบ่ง
+        JPanel labelPanel = new JPanel();
+        labelPanel.setLayout(new BoxLayout(labelPanel, BoxLayout.Y_AXIS));
+        labelPanel.setOpaque(false);
+        labelPanel.setAlignmentX(Component.LEFT_ALIGNMENT); // ชิดซ้าย
+
+        labelPanel.add(movieLabel);
+        labelPanel.add(Box.createVerticalStrut(10));
+
+        JSeparator separator = new JSeparator(SwingConstants.HORIZONTAL);
+        separator.setForeground(Color.WHITE);
+        separator.setBackground(Color.WHITE);
+        separator.setMaximumSize(new Dimension(800, 3));
+        separator.setAlignmentX(Component.CENTER_ALIGNMENT);
+        labelPanel.add(separator);
+        labelPanel.add(Box.createVerticalStrut(10));
+
+        rightPanel.add(labelPanel);
+        rightPanel.add(Box.createVerticalStrut(10));
+        
+  
+        // โหลดไอคอน Date
+        ImageIcon dateIcon = new ImageIcon("Picture/icon/date.png");
+        Image dateImg = dateIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+        JLabel dateIconLabel = new JLabel(new ImageIcon(dateImg));
+
+        // สร้าง label ข้อความ
         JLabel dateLabel = new JLabel("Date");
-        dateLabel.setFont(new Font("SansSerif", Font.PLAIN, 24));
+        dateLabel.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 24));
         dateLabel.setForeground(Color.WHITE);
-        dateLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        rightPanel.add(dateLabel);
+
+        // รวมไอคอน + ข้อความในแถวเดียวกัน
+        JPanel dateHeaderPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
+        dateHeaderPanel.setOpaque(false);
+        dateHeaderPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        dateHeaderPanel.add(dateIconLabel);
+        dateHeaderPanel.add(dateLabel);
+        dateHeaderPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, -60, 0)); 
+        rightPanel.add(dateHeaderPanel);
 
         // ปุ่มเลือกวัน
-        JPanel datePanel = new JPanel(new GridLayout(1, 2, 10, 10));
-        datePanel.setBackground(Color.BLACK);
+        JPanel datePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
+        datePanel.setOpaque(false);
+        datePanel.setAlignmentX(Component.LEFT_ALIGNMENT); // ชิดซ้าย
+
+
 
         JButton date1 = createWhiteButton("20/9/2025");
         JButton date2 = createWhiteButton("21/9/2025");
@@ -67,25 +117,37 @@ public class Page2Panel extends JPanel {
         dateButtons.add(date1);
         dateButtons.add(date2);
 
-
         date1.addActionListener(e -> toggleDate("20/9/2025", date1));
         date2.addActionListener(e -> toggleDate("21/9/2025", date2));
 
         datePanel.add(date1);
         datePanel.add(date2);
         rightPanel.add(datePanel);
-        rightPanel.add(Box.createVerticalStrut(20));
+     
+        // โหลดไอคอน Date
+        ImageIcon timeIcon = new ImageIcon("Picture/icon/time.png");
+        Image timeImg = timeIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+        JLabel timeIconLabel = new JLabel(new ImageIcon(timeImg));
 
-        // Time label
+        // สร้าง label ข้อความ
         JLabel timeLabel = new JLabel("Time");
-        timeLabel.setFont(new Font("SansSerif", Font.PLAIN, 24));
+        timeLabel.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 24));
         timeLabel.setForeground(Color.WHITE);
-        timeLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        rightPanel.add(timeLabel);
+
+        // รวมไอคอน + ข้อความในแถวเดียวกัน
+        JPanel timeHeaderPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
+        timeHeaderPanel.setOpaque(false);
+        timeHeaderPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        timeHeaderPanel.add(timeIconLabel);
+        timeHeaderPanel.add(timeLabel);
+        timeHeaderPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, -60, 0)); 
+
+        rightPanel.add(timeHeaderPanel);
 
         // ปุ่มเลือกเวลา
-        JPanel timePanel = new JPanel(new GridLayout(2, 2, 10, 10));
-        timePanel.setBackground(Color.BLACK);
+        JPanel timePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
+        timePanel.setOpaque(false);
+        timePanel.setAlignmentX(Component.LEFT_ALIGNMENT); // ชิดซ้าย
 
         JButton t1 = createWhiteButton("12:00");
         JButton t2 = createWhiteButton("15:00");
@@ -104,22 +166,24 @@ public class Page2Panel extends JPanel {
         timePanel.add(t3); timePanel.add(t4);
         rightPanel.add(timePanel);
 
+        // เพิ่ม rightPanel เข้า contentPanel
         contentPanel.add(rightPanel);
-
         add(contentPanel, BorderLayout.CENTER);
-
         //  ปุ่ม Back + Continue
-        JPanel bottomPanel = new JPanel(new BorderLayout());
-        bottomPanel.setBackground(Color.BLACK);
+        JPanel bottomPanel = new JPanel(new GridLayout(1, 2, 10, 0));
+        bottomPanel.setOpaque(false); // ให้โปร่งใส
+
 
         JButton backBtn = createBlueButton("Back");
         JButton continueBtn = createBlueButton("Continue");
 
+
+        
         //แจ้งเตือนถ้าไม่ได้เลือก Date หรือ Time
         backBtn.addActionListener(e -> app.showPage1());
         continueBtn.addActionListener(e -> {
             if (selectedDate != null && selectedTime != null) {
-                app.showPage3(selectedDate, selectedTime);
+                app.showPage3(movieName, movieImage, selectedDate, selectedTime);
             } else {
                 JOptionPane.showMessageDialog(app, "Choose Date and Time", "Warning", JOptionPane.WARNING_MESSAGE);
             }
@@ -127,6 +191,7 @@ public class Page2Panel extends JPanel {
 
         bottomPanel.add(backBtn, BorderLayout.WEST);
         bottomPanel.add(continueBtn, BorderLayout.EAST);
+        bottomPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 
         add(bottomPanel, BorderLayout.SOUTH);
     }
@@ -137,17 +202,18 @@ public class Page2Panel extends JPanel {
         btn.setBackground(Color.WHITE);
         btn.setForeground(Color.BLACK);
         btn.setFocusPainted(false);
-        btn.setFont(new Font("SansSerif", Font.PLAIN, 16));
+        btn.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 16));
         return btn;
     }
 
     // ปุ่มสีน้ำเงิน ตัวอักษรขาว 
     private JButton createBlueButton(String text) {
         JButton btn = new JButton(text);
-        btn.setBackground(Color.BLUE);
+        btn.setBackground(Color.decode("#3f2fbf"));
         btn.setForeground(Color.WHITE);
         btn.setFocusPainted(false);
-        btn.setFont(new Font("SansSerif", Font.BOLD, 16));
+        btn.setFont(new Font("Arial Rounded MT Bold", Font.BOLD, 18));
+        btn.setPreferredSize(new Dimension(500, 46));
         return btn;
     }
     // Toggle Date เพื่อเลือกวัน 
@@ -187,7 +253,27 @@ public class Page2Panel extends JPanel {
             selectedTime = time;
             btn.setBackground(new Color(30, 144, 255)); // Dodger Blue
             btn.setForeground(Color.WHITE);
+            
         }
     }
-}
+@Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        if (backgroundImage != null) {
+            Graphics2D g2d = (Graphics2D) g.create();
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.7f)); // ความจาง
+            g2d.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+            
+ // วาด Overlay สีดำโปร่งใสเพื่อทำให้มืดลง
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.8f)); // ปรับความเข้ม
+        g2d.setColor(Color.BLACK);
+        g2d.fillRect(0, 0, getWidth(), getHeight());
+
+        g2d.dispose();
+       }
+
+    }
+ }
+
     

@@ -13,16 +13,16 @@ public class DataStore {
             File f1 = new File(MOVIES_FILE);
             if (!f1.exists()){
                 try (PrintWriter pw = new PrintWriter(new FileWriter(f1))){
-                    pw.println("Movie 1");
-                    pw.println("Movie 2");
-                    pw.println("Movie 3");
-                    pw.println("Movie 4");
-                    pw.println("Movie 5");
-                    pw.println("Movie 6");
-                    pw.println("Movie 7");
-                    pw.println("Movie 8");
-                    pw.println("Movie 9");
-                    pw.println("Movie 10");
+                    pw.println("Home Alone");
+                    pw.println("Titanic");
+                    pw.println("IT");
+                    pw.println("Frozen II");
+                    pw.println("4 Kings");
+                    pw.println("LAHN MAH");
+                    pw.println("Final Destination Bloodlines");
+                    pw.println("Demon Slayer Infinity Castle");
+                    pw.println("Chainsaw Man Reze Arc");
+                    pw.println("Avatar Fire and Ash");
                 }
             }
 
