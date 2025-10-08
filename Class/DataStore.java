@@ -95,19 +95,15 @@ public class DataStore {
             while ((line = br.readLine()) != null) {
                 line = line.trim();
                 if (line.isEmpty()) continue;
+                String[] p = line.split(",", 3); // แยกเป็น 3 ส่วน: ชื่อ, รูป, ราคา
+                if (p.length < 3) continue;
 
-                String[] p = line.split(",", 2);
-                if (p.length < 2) continue;
+                String name = p[0].trim();
+                String imagePath = p[1].trim();
+                int price = 0;
+                try { price = Integer.parseInt(p[2].trim()); } catch (Exception e) {}
 
-                String imagePath = p[0].trim(); // เช่น Picture/addon/Set LOTTE.png
-                int price = Integer.parseInt(p[1].trim());
-
-                // ดึงชื่อจากไฟล์ เช่น Set LOTTE
-                String fileName = new File(imagePath).getName(); 
-                String name = fileName.replace("Set ", "").replace(".png", ""); 
-
-                // new SetItem(name, price, imagePath) → สมมติว่า SetItem รองรับ 3 พารามิเตอร์
-                list.add(new SetItem(name, price, imagePath));
+                list.add(new SetItem(name, imagePath, price));
             }
         } catch (Exception e) {
             e.printStackTrace();

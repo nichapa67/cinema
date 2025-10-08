@@ -2,6 +2,28 @@ package Class;
 
 public class SetItem {
     private String name;
+    private String imagePath;
+    private int price;
+    private String imagePath; // เพิ่มฟิลด์ใหม่
+
+    public SetItem(String name, String imagePath, int price) {
+        this.name = name;
+        this.imagePath = imagePath;
+        this.price = price;
+    }
+
+    public String getName() { return name; }
+    public String getImagePath() { return imagePath; }
+    public int getPrice() { return price; }
+
+    @Override
+    public String toString() {
+        return name + " (" + price + " THB)";
+    }
+}
+
+/*public class SetItem {
+    private String name;
     private int price;
     private String imagePath; // เพิ่มฟิลด์ใหม่
 
@@ -27,4 +49,4 @@ public class SetItem {
     public String toString() {
         return name + " (" + price + " THB)";
     }
-}
+}*/
