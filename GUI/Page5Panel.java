@@ -1,21 +1,29 @@
 package GUI;
 
-import javax.swing.*;
-import java.awt.*;
 import Class.*;
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+import javax.swing.*;
 
 public class Page5Panel extends JPanel {
     public CinemaApp app;
     public String fromPage; 
     private JTextField mobileField; 
+ private Image backgroundImage;
 
     public Page5Panel(CinemaApp app, String fromPage) {
         this.app = app;
         this.fromPage = fromPage;
 
         setLayout(new BorderLayout(20, 20));
-        setBackground(Color.BLACK);
-
+        //ภาพพื้นหลัง
+        try {
+            backgroundImage = ImageIO.read(new File("Picture/bg/bg.jpg"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         BookingSession session = app.getBookingSession();
 
         // [ส่วน GUI ด้านบน: title, form, total] 
@@ -23,55 +31,65 @@ public class Page5Panel extends JPanel {
         // ===== MAIN CENTER PANEL (แนวตั้ง) =====
         JPanel centerPanel = new JPanel();
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
-        centerPanel.setBackground(Color.BLACK);
+        centerPanel.setOpaque(false);
 
         // ===== Title =====
-        JLabel titleLabel = new JLabel("Confirm", SwingConstants.CENTER);
-        titleLabel.setFont(new Font("SansSerif", Font.BOLD, 50));
-        titleLabel.setForeground(Color.WHITE);
-        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        titleLabel.setBorder(BorderFactory.createEmptyBorder(80, 0, 0, 0));
-        centerPanel.add(titleLabel);
+JLabel titleLabel = new JLabel("Confirm", SwingConstants.CENTER);
+titleLabel.setFont(new Font("Arial Rounded MT Bold", Font.BOLD, 50));
+titleLabel.setForeground(Color.WHITE);
+titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+titleLabel.setBorder(BorderFactory.createEmptyBorder(35, 35, 0, 35));
+centerPanel.add(titleLabel);
 
-        // ระยะห่าง 20px
-        centerPanel.add(Box.createVerticalStrut(20));
+// ===== เส้นใต้ =====
+JPanel separatorPanel = new JPanel();
+separatorPanel.setLayout(new BoxLayout(separatorPanel, BoxLayout.X_AXIS));
+separatorPanel.setOpaque(false);
+separatorPanel.setBorder(BorderFactory.createEmptyBorder(20, 35, 10, 35)); // ขอบซ้ายขวา
+
+JSeparator separator = new JSeparator();
+separator.setForeground(Color.WHITE);
+separator.setMaximumSize(new Dimension(Integer.MAX_VALUE, 1)); // ความสูงของเส้น
+separatorPanel.add(separator);
+
+centerPanel.add(separatorPanel);
 
         // ===== Form =====
         JPanel formPanel = new JPanel(new GridBagLayout());
-        formPanel.setBackground(Color.BLACK);
+        formPanel.setOpaque(false);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(15, 15, 15, 15);
         gbc.anchor = GridBagConstraints.WEST;
 
         // Label: Mobile
         JLabel mobileLabel = new JLabel("Mobile:");
-        mobileLabel.setFont(new Font("SansSerif", Font.PLAIN, 22));
+        mobileLabel.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 36));
         mobileLabel.setForeground(Color.WHITE);
         gbc.gridx = 0; gbc.gridy = 0;
         formPanel.add(mobileLabel, gbc);
 
         // preload mobile จาก session ถ้ามี
         mobileField = new JTextField(session.getMobile() != null ? session.getMobile() : "", 10);
-        mobileField.setFont(new Font("SansSerif", Font.PLAIN, 22));
-        mobileField.setPreferredSize(new Dimension(500, 40));
+        mobileField.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 36));
+        mobileField.setPreferredSize(new Dimension(500, 65));
         gbc.gridx = 1; gbc.gridy = 0;
         formPanel.add(mobileField, gbc);
 
         // Label: Total
         JLabel totalLabel = new JLabel("Total:");
-        totalLabel.setFont(new Font("SansSerif", Font.PLAIN, 22));
+        totalLabel.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 36));
         totalLabel.setForeground(Color.WHITE);
         gbc.gridx = 0; gbc.gridy = 1;
         formPanel.add(totalLabel, gbc);
 
         JLabel totalValue = new JLabel(session.getTotalPrice() + " THB");
-        totalValue.setFont(new Font("SansSerif", Font.BOLD, 24));
+        totalValue.setFont(new Font("Arial Rounded MT Bold", Font.BOLD, 36));
         totalValue.setForeground(Color.WHITE);
         totalValue.setBorder(BorderFactory.createLineBorder(Color.GRAY, 2));
         totalValue.setOpaque(true);
-        totalValue.setBackground(Color.BLACK);
+        totalValue.setOpaque(false);
         totalValue.setHorizontalAlignment(SwingConstants.CENTER);
-        totalValue.setPreferredSize(new Dimension(300, 50));
+        totalValue.setPreferredSize(new Dimension(400, 65));
         gbc.gridx = 1; gbc.gridy = 1;
         formPanel.add(totalValue, gbc);
 
@@ -81,15 +99,16 @@ public class Page5Panel extends JPanel {
         add(centerPanel, BorderLayout.CENTER);
 
         // ===== BOTTOM: Buttons =====
-        JPanel buttonPanel = new JPanel(new BorderLayout());
-        buttonPanel.setBackground(Color.BLACK);
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(20, 40, 20, 40));
+        JPanel buttonPanel = new JPanel(new GridLayout(1,2, 20, 0));
+
+        buttonPanel.setOpaque(false);
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(16, 0, 0, 0));
 
         JButton backButton = new JButton("Back");
-        backButton.setFont(new Font("SansSerif", Font.BOLD, 20));
-        backButton.setBackground(Color.BLUE);
+        backButton.setFont(new Font("Arial Rounded MT Bold", Font.BOLD, 20));
+        backButton.setBackground(Color.decode("#3f2fbf"));
         backButton.setForeground(Color.WHITE);
-        backButton.setPreferredSize(new Dimension(160, 50));
+        backButton.setPreferredSize(new Dimension(500, 50));
         backButton.addActionListener(e -> {
             if ("Page4Panel".equals(fromPage)) {
                 app.showPage4();
@@ -101,10 +120,10 @@ public class Page5Panel extends JPanel {
         });
 
         JButton confirmButton = new JButton("Confirm");
-        confirmButton.setFont(new Font("SansSerif", Font.BOLD, 20));
-        confirmButton.setBackground(Color.GREEN);
-        confirmButton.setForeground(Color.BLACK);
-        confirmButton.setPreferredSize(new Dimension(160, 50));
+        confirmButton.setFont(new Font("Arial Rounded MT Bold", Font.BOLD, 20));
+        confirmButton.setBackground(Color.decode("#3f2fbf"));
+        confirmButton.setForeground(Color.white);
+        confirmButton.setPreferredSize(new Dimension(500, 50));
 
         confirmButton.addActionListener(e -> {
             String mobile = mobileField.getText().trim();
@@ -138,5 +157,22 @@ public class Page5Panel extends JPanel {
         buttonPanel.add(backButton, BorderLayout.WEST);
         buttonPanel.add(confirmButton, BorderLayout.EAST);
         add(buttonPanel, BorderLayout.SOUTH);
+    }
+    
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        if (backgroundImage != null) {
+            Graphics2D g2d = (Graphics2D) g.create();
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.7f));
+            g2d.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.85f));
+            g2d.setColor(Color.BLACK);
+            g2d.fillRect(0, 0, getWidth(), getHeight());
+
+            g2d.dispose();
+        }
     }
 }

@@ -1,35 +1,47 @@
 package GUI;
 
+import Class.BookingSession;
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
-import java.awt.*;
-import Class.BookingSession;
 
 public class Page4Panel extends JPanel {
     public CinemaApp app;
+    private Image backgroundImage;
 
     public Page4Panel(CinemaApp app) {
         this.app = app;
         setLayout(new BorderLayout(20, 20));
-        setBackground(Color.BLACK);
+        
+        //ภาพพื้นหลัง
+        try {
+            backgroundImage = ImageIO.read(new File("Picture/bg/bg.jpg"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         BookingSession session = app.getBookingSession();
 
         // ===== Top: Total =====
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
-        topPanel.setBackground(Color.BLACK);
+        topPanel.setOpaque(false);
         JLabel totalLabel = new JLabel("TOTAL");
-        totalLabel.setFont(new Font("SansSerif", Font.BOLD, 40));
+        totalLabel.setFont(new Font("Arial Rounded MT Bold", Font.BOLD, 40));
         totalLabel.setForeground(Color.WHITE);
+
+       topPanel.setBorder(BorderFactory.createEmptyBorder(20, 50, 0, 0)); 
 
         //บอกเฉพาะราคาที่นั่ง ไม่รวม Add-on
         //JLabel priceLabel = new JLabel(session.getTotalPrice() + " THB");
         JLabel priceLabel = new JLabel(session.getSeatPrice() + " THB");
-        priceLabel.setFont(new Font("SansSerif", Font.BOLD, 40));
+        priceLabel.setFont(new Font("Arial Rounded MT Bold", Font.BOLD, 40));
         priceLabel.setForeground(Color.WHITE);
         priceLabel.setBorder(new LineBorder(Color.GRAY, 3));
         priceLabel.setOpaque(true);
-        priceLabel.setBackground(Color.BLACK);
+        priceLabel.setOpaque(false);
         priceLabel.setPreferredSize(new Dimension(280, 70));
         priceLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
@@ -39,11 +51,11 @@ public class Page4Panel extends JPanel {
 
         // ===== Center: left image / right info =====
         JPanel centerPanel = new JPanel(new GridLayout(1, 2, 20, 0));
-        centerPanel.setBackground(Color.BLACK);
+        centerPanel.setOpaque(false);
 
         // left: movie image centered vertically
         JPanel leftPanel = new JPanel(new GridBagLayout());
-        leftPanel.setBackground(Color.BLACK);
+        leftPanel.setOpaque(false);
         JLabel moviePhoto = new JLabel();
         moviePhoto.setHorizontalAlignment(SwingConstants.CENTER);
         moviePhoto.setVerticalAlignment(SwingConstants.CENTER);
@@ -60,10 +72,11 @@ public class Page4Panel extends JPanel {
 
         leftPanel.add(moviePhoto); // GridBagLayout จะ center ให้อัตโนมัติ
         centerPanel.add(leftPanel);
+       centerPanel.setBorder(BorderFactory.createEmptyBorder(-10, 0, 20, 0)); 
 
         // right: info block centered (use GridBagLayout to center the whole infoPanel)
         JPanel rightPanel = new JPanel(new GridBagLayout());
-        rightPanel.setBackground(Color.BLACK);
+        rightPanel.setOpaque(false);
 
         JPanel infoPanel = new JPanel();
         infoPanel.setOpaque(false);
@@ -98,8 +111,8 @@ public class Page4Panel extends JPanel {
 
         // ADD ON button (fixed size, centered)
         JButton addOnButton = new JButton("ADD ON");
-        addOnButton.setFont(new Font("SansSerif", Font.BOLD, 20));
-        addOnButton.setBackground(Color.GREEN);
+        addOnButton.setFont(new Font("Arial Rounded MT Bold", Font.BOLD, 20));
+        addOnButton.setBackground(Color.decode("#00bf63"));
         addOnButton.setForeground(Color.BLACK);
         addOnButton.setFocusPainted(false);
         addOnButton.setPreferredSize(new Dimension(260, 60));
@@ -120,25 +133,27 @@ public class Page4Panel extends JPanel {
 
         centerPanel.add(rightPanel);
         add(centerPanel, BorderLayout.CENTER);
+        
+
 
         // ===== Bottom buttons: a bit raised from bottom =====
-        JPanel bottomPanel = new JPanel(new BorderLayout());
-        bottomPanel.setBackground(Color.BLACK);
-        bottomPanel.setBorder(BorderFactory.createEmptyBorder(12, 16, 28, 16)); // top,left,bottom,right
+        JPanel bottomPanel = new JPanel(new GridLayout(1, 2, 10, 0));
+        bottomPanel.setOpaque(false);
+        bottomPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0)); // top,left,bottom,right
 
         JButton backButton = new JButton("Back");
-        backButton.setFont(new Font("SansSerif", Font.BOLD, 18));
-        backButton.setBackground(Color.BLUE);
+        backButton.setFont(new Font("Arial Rounded MT Bold", Font.BOLD, 18));
+        backButton.setBackground(Color.decode("#3f2fbf"));
         backButton.setForeground(Color.WHITE);
-        backButton.setPreferredSize(new Dimension(140, 46));
+        backButton.setPreferredSize(new Dimension(500, 46));
         backButton.setFocusPainted(false);
-        backButton.addActionListener(e -> app.showPage3(session.getDate(), session.getTime()));
+        backButton.addActionListener(e -> app.showPage3());
 
         JButton continueButton = new JButton("Continue");
-        continueButton.setFont(new Font("SansSerif", Font.BOLD, 18));
-        continueButton.setBackground(Color.BLUE);
+        continueButton.setFont(new Font("Arial Rounded MT Bold", Font.BOLD, 18));
+        continueButton.setBackground(Color.decode("#3f2fbf"));
         continueButton.setForeground(Color.WHITE);
-        continueButton.setPreferredSize(new Dimension(140, 46));
+        continueButton.setPreferredSize(new Dimension(500, 46));
         continueButton.setFocusPainted(false);
         continueButton.addActionListener(e -> {
         // เคลียร์ Add-on ถ้าผู้ใช้กด Continue จาก Page4 โดยไม่เลือก Add-on
@@ -154,7 +169,7 @@ public class Page4Panel extends JPanel {
 
     private JLabel makeInfoLabel(String text) {
         JLabel label = new JLabel(text);
-        label.setFont(new Font("SansSerif", Font.PLAIN, 20));
+        label.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 20));
         label.setForeground(Color.WHITE);
         return label;
     }
@@ -162,4 +177,21 @@ public class Page4Panel extends JPanel {
     private String nonNull(String s) {
         return s == null ? "-" : s;
     }
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        if (backgroundImage != null) {
+            Graphics2D g2d = (Graphics2D) g.create();
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.7f));
+            g2d.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.85f));
+            g2d.setColor(Color.BLACK);
+            g2d.fillRect(0, 0, getWidth(), getHeight());
+
+            g2d.dispose();
+        }
+    }
+
 }
