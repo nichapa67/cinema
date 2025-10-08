@@ -4,6 +4,7 @@ public class SetItem {
     private String name;
     private String imagePath;
     private int price;
+    private String imagePath; // เพิ่มฟิลด์ใหม่
 
     public SetItem(String name, String imagePath, int price) {
         this.name = name;
