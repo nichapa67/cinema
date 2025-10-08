@@ -120,7 +120,7 @@ public class Page6Panel extends JPanel {
                 infoGroup.add(plusLabel, gbc);
 
                 // รูป Add-on จาก session
-                ImageIcon addonIcon = new ImageIcon("Picture/" + addonImage);
+                ImageIcon addonIcon = new ImageIcon(addonImage);
                 Image scaledAddon = addonIcon.getImage().getScaledInstance(150, 350, Image.SCALE_SMOOTH);
                 JLabel addonLabel = new JLabel(new ImageIcon(scaledAddon));
 

@@ -15,7 +15,7 @@ public class Page42Panel extends JPanel {
     private Image backgroundImage;
 
 
-    public Page42Panel(CinemaApp app, String setName, String setPrice, String setImage) {
+    public Page42Panel(CinemaApp app, String setName, String setPrice, String addonImage) {
         this.app = app;
         setLayout(new BorderLayout(20, 20));
        
@@ -34,7 +34,7 @@ public class Page42Panel extends JPanel {
         session.setAddonPrice(addonPrice);
         session.setSelectedAddonName(setName);
         session.setSelectedAddonPrice(setPrice);
-        session.setSelectedAddonImage(setImage);
+        session.setSelectedAddonImage(addonImage);
 
         // ===== TOP: TOTAL =====
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
@@ -94,13 +94,12 @@ public class Page42Panel extends JPanel {
         centerPanel.add(Box.createRigidArea(new Dimension(20, 0))); // เว้นระยะ
         centerPanel.add(plusLabel);
         centerPanel.add(Box.createRigidArea(new Dimension(20, 0))); // เว้นระยะ
-
         centerPanel.add(Box.createRigidArea(new Dimension(20, 0)));
 
         // รูป Add-on
         JLabel addonPhoto = new JLabel();
         try {
-            ImageIcon icon = new ImageIcon("Picture/" + setImage);
+            ImageIcon icon = new ImageIcon(addonImage);
             Image scaled = icon.getImage().getScaledInstance(150, 350, Image.SCALE_SMOOTH);
             addonPhoto.setIcon(new ImageIcon(scaled));
         } catch (Exception e) {
@@ -147,7 +146,7 @@ public class Page42Panel extends JPanel {
         backButton.setBackground(Color.decode("#3f2fbf"));
         backButton.setForeground(Color.WHITE);
         backButton.setPreferredSize(new Dimension(500,46));
-        backButton.addActionListener(e -> app.showPage4());
+        backButton.addActionListener(e -> app.showPage41());
 
 
         JButton confirmButton = new JButton("Confirm");
@@ -160,7 +159,7 @@ public class Page42Panel extends JPanel {
             session.setAddonPrice(addonPrice);
             session.setSelectedAddonName(setName);
             session.setSelectedAddonPrice(setPrice);
-            session.setSelectedAddonImage(setImage);
+            session.setSelectedAddonImage(addonImage);
 
             // refresh TOTAL
             priceLabel.setText(session.getTotalPrice() + " THB");
