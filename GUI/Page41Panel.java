@@ -1,5 +1,4 @@
 package GUI;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
@@ -12,12 +11,10 @@ public class Page41Panel extends JPanel {
     private CinemaApp app;
     private Image backgroundImage;
 
-
     public Page41Panel(CinemaApp app) {
         this.app = app;
         setLayout(new BorderLayout(20, 20));
         
-
          //ภาพพื้นหลัง
         try {
             backgroundImage = ImageIO.read(new File("Picture/bg/bg.jpg"));
@@ -47,25 +44,6 @@ public class Page41Panel extends JPanel {
 
         // เพิ่ม Panel เข้าไปด้านบน
         add(titlePanel, BorderLayout.NORTH);
-
-        /*// ===== Center Panel =====
-        JPanel cardPanel = new JPanel(new GridLayout(1, 4, 20, 0));
-        cardPanel.setOpaque(false);
-
-        // โหลดข้อมูลจากไฟล์ sets.csv
-        java.util.List<SetItem> sets = DataStore.loadSets();
-
-        // แสดงแค่ 4 ชุดแรก (Set1-Set4)
-        for (int i = 0; i < 4 && i < sets.size(); i++) {
-            SetItem s = sets.get(i);
-            String setName = "Set " + (i + 1);          // ใช้ชื่อ Set1-Set4 เหมือนเดิม
-            String priceText = s.getPrice() + " THB";   // ราคาอ่านจากไฟล์
-            String imagePath = s.getImagePath();        // path ของรูปจากไฟล์ เช่น Picture/addon/Set LOTTE.png
-            cardPanel.add(createAddOnCard(setName, priceText, imagePath, new Color(30, 30, 30)));
-        }
-
-        cardPanel.setBorder(BorderFactory.createEmptyBorder(0, 40, 0, 40));
-        add(cardPanel, BorderLayout.CENTER);*/
 
         // ===== Center Panel =====
         JPanel cardPanel = new JPanel(new GridLayout(1, 4, 20, 0));
@@ -135,14 +113,6 @@ public class Page41Panel extends JPanel {
         topPanel.add(priceLabel);
         card.add(topPanel, BorderLayout.NORTH);
 
-        /*// ส่วนกลาง (รูปภาพ)
-        JLabel imgLabel = new JLabel();
-        imgLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        ImageIcon icon = new ImageIcon("Picture/" + imageFile);
-        Image scaled = icon.getImage().getScaledInstance(200, 450, Image.SCALE_SMOOTH);
-        imgLabel.setIcon(new ImageIcon(scaled));
-        card.add(imgLabel, BorderLayout.CENTER);*/
-
         // ส่วนกลาง (รูปภาพ)
         JLabel imgLabel = new JLabel();
         imgLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -157,7 +127,7 @@ public class Page41Panel extends JPanel {
         card.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                app.showPage42(setName, price, imageFile);
+                app.showPage42(setName, price, imageFile, /*movieImage*/ app.getBookingSession().getMovieImage());
             }
 
             @Override
@@ -190,5 +160,4 @@ public class Page41Panel extends JPanel {
             g2d.dispose();
         }
     }
-
 }

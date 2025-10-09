@@ -165,7 +165,7 @@ public class Page3Panel extends JPanel {
 
         // รูปหนัง
         rightPanel.add(Box.createVerticalStrut(50));
-        ImageIcon icon = new ImageIcon("Picture/" + movieImage);
+        ImageIcon icon = new ImageIcon(movieImage);
         Image img = icon.getImage().getScaledInstance(180, 250, Image.SCALE_SMOOTH);
         JLabel moviePoster = new JLabel(new ImageIcon(img));
 

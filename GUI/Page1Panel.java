@@ -1,16 +1,29 @@
 package GUI;
 import Class.*;
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 public class Page1Panel extends JPanel {
+    private Image backgroundImage;
+    public String movieName;
 
     public Page1Panel(CinemaApp app) {
 
         setLayout(new BorderLayout());
-        setBackground(Color.BLACK); // พื้นหลังดำเหมือนเดิม
+        
+        //ภาพพื้นหลัง
+        try {
+            backgroundImage = ImageIO.read(new File("Picture/bg/bg.jpg"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-        // ส่วนหัว (icon + คำว่า Movies)
+        // ===== ส่วนหัว (icon + คำว่า Movies) =====
         ImageIcon headerIcon = new ImageIcon("Picture/icon/movie.png");
         Image headerImg = headerIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
         JLabel headerLabel = new JLabel(new ImageIcon(headerImg));
@@ -21,40 +34,31 @@ public class Page1Panel extends JPanel {
 
         JPanel headerPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         headerPanel.setOpaque(false);
-        headerPanel.setBorder(BorderFactory.createEmptyBorder(20, 23, 0, 0)); // เว้นขอบซ้ายบน
+        headerPanel.setBorder(BorderFactory.createEmptyBorder(20, 25, 0, 0));
         headerPanel.add(headerLabel);
         headerPanel.add(title);
         title.setBorder(BorderFactory.createEmptyBorder(5, 20, 5, 0));
         add(headerPanel, BorderLayout.NORTH);
 
-        // ชื่อหนังทั้งหมด
-        String[] movieNames = {
-            "Home Alone",
-            "Titanic",
-            "IT",
-            "Frozen II",
-            "4 Kings",
-            "LAHN MAH",
-            "Final Destination Bloodlines",
-            "Demon Slayer Infinity Castle",
-            "Chainsaw Man Reze Arc",
-            "Avatar Fire and Ash"
-        };
+        // ===== โหลดหนังจากไฟล์ movies.csv =====
+        List<Movie> movies = DataStore.loadMovies();
 
-        // Panel รวมหนังทั้งหมด
+        // ให้เรื่องใหม่สุด (ที่เพิ่งเพิ่มในไฟล์) อยู่บนสุด
+        Collections.reverse(movies);
+
+        // ===== Panel รวมหนังทั้งหมด (3 แถว 4 หลัก) =====
         JPanel allMoviesPanel = new JPanel(new GridLayout(3, 4, 15, 15));
-        allMoviesPanel.setBackground(Color.BLACK);
+        allMoviesPanel.setOpaque(false);
 
-        // ลำดับการแสดง: 10,9,8,7, 6,5,4,3, 2,1
-        int[] order = {9, 8, 7, 6, 5, 4, 3, 2, 1, 0};
+        // ===== สร้างปุ่มหนังแต่ละเรื่อง =====
+        for (Movie movie : movies) {
+            String movieName = movie.getName();
+            String imagePath = movie.getImagePath(); // จาก CSV เช่น Picture/movie/Home Alone.jpg
 
-        for (int index : order) {
-            if (index >= movieNames.length) continue;
-            String movieName = movieNames[index];
             JButton btn = new JButton();
 
-            // โหลดรูปจาก Picture/movie/ชื่อหนัง.jpg
-            ImageIcon icon = new ImageIcon("Picture/movie/" + movieName + ".jpg");
+            // โหลดรูปภาพจาก path ในไฟล์
+            ImageIcon icon = new ImageIcon(imagePath);
             Image img = icon.getImage().getScaledInstance(200, 280, Image.SCALE_SMOOTH);
             btn.setIcon(new ImageIcon(img));
 
@@ -74,66 +78,47 @@ public class Page1Panel extends JPanel {
             btn.addActionListener(e -> {
                 BookingSession session = app.getBookingSession();
                 session.setMovieName(movieName);
-                session.setMovieImage("movie/" + movieName + ".jpg");
+                session.setMovieImage(imagePath); // ใช้ path ตรงจากไฟล์
                 app.showPage2();
             });
 
             allMoviesPanel.add(btn);
         }
 
-        //เห็นสีขาวปกติ
-        /*// ScrollPane ให้เห็นแค่ 2 แถวแรกก่อน ต้องเลื่อนถึงเห็นแถวล่าง
+        // ===== ScrollPane ให้เห็นแค่ 2 แถวแรกก่อน ต้องเลื่อนถึงเห็นแถวล่าง =====
         JScrollPane scrollPane = new JScrollPane(allMoviesPanel);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
         scrollPane.setBorder(null);
-        scrollPane.getViewport().setBackground(Color.BLACK);
+        scrollPane.setOpaque(false);
+        scrollPane.getViewport().setOpaque(false);
 
-        add(scrollPane, BorderLayout.CENTER);*/
 
-
-        //เห็นเป็นแถบเลื่อนสีเทา
-        // ScrollPane ให้เห็นแค่ 2 แถวแรกก่อน ต้องเลื่อนถึงเห็นแถวล่าง
-        JScrollPane scrollPane = new JScrollPane(allMoviesPanel);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        scrollPane.getVerticalScrollBar().setUnitIncrement(16); // หรือค่าที่คุณตั้งไว้
-        scrollPane.setBorder(null);
-        scrollPane.getViewport().setBackground(Color.BLACK);
-        
-        // ******* โค้ดสำหรับเปลี่ยนสีแถบเลื่อน *******
+        // ===== ปรับแต่งสีแถบเลื่อน =====
         JScrollBar verticalScrollBar = scrollPane.getVerticalScrollBar();
-        
-        // 1. เปลี่ยนสีพื้นหลังของแถบเลื่อน (Track)
-        verticalScrollBar.setBackground(Color.DARK_GRAY); 
-        
-        // 2. เปลี่ยนสีของ "ปุ่มเลื่อน" (Thumb)
-        verticalScrollBar.setForeground(Color.GRAY); 
-        
-        // 3. (ทางเลือก) ซ่อนปุ่มลูกศรที่ปลายของแถบเลื่อน
-        verticalScrollBar.setPreferredSize(new Dimension(10, 0)); // ลดความกว้างของปุ่มลูกศร (ไม่จำเป็นต้องเปลี่ยน)
-        // **********************************************
+        verticalScrollBar.setBackground(Color.DARK_GRAY);
+        verticalScrollBar.setForeground(Color.GRAY);
+        verticalScrollBar.setPreferredSize(new Dimension(10, 0));
 
         add(scrollPane, BorderLayout.CENTER);
+    }
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
 
+        if (backgroundImage != null) {
+            Graphics2D g2d = (Graphics2D) g.create();
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.7f)); // ความจาง
+            g2d.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+            
+        // วาด Overlay สีดำโปร่งใสเพื่อทำให้มืดลง
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.8f)); // ปรับความเข้ม
+        g2d.setColor(Color.BLACK);
+        g2d.fillRect(0, 0, getWidth(), getHeight());
 
-
-        /*//เห็นเป็นเส้นบางๆ
-        // ScrollPane ให้เห็นแค่ 2 แถวแรกก่อน ต้องเลื่อนถึงเห็นแถวล่าง
-        JScrollPane scrollPane = new JScrollPane(allMoviesPanel);
-        // เปลี่ยนจาก AS_NEEDED เป็น ALWAYS เพื่อให้แถบเลื่อนถูกสร้างเสมอ ก่อนจะซ่อนมัน
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS); 
-        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
-        scrollPane.setBorder(null);
-        scrollPane.getViewport().setBackground(Color.BLACK);
-        
-        // โค้ดสำหรับซ่อนแถบเลื่อน แต่ยังเลื่อนด้วยเมาส์ได้ 
-        // กำหนดให้ UI ของ Scroll Bar เป็น null
-        scrollPane.getVerticalScrollBar().setUI(null); 
-
-        add(scrollPane, BorderLayout.CENTER);*/
+        g2d.dispose();
+       }
 
     }
 }
