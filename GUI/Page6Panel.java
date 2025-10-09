@@ -74,18 +74,14 @@ public class Page6Panel extends JPanel {
         // กำหนดขนาดเส้นแบ่ง
         separator.setPreferredSize(new Dimension(1000, 3)); 
 
-
         separatorWrapper.add(separator);
         centerPanel.add(separatorWrapper);
         centerPanel.add(Box.createVerticalStrut(30));
 
         //  กลุ่มรูป + รายละเอียด
         JPanel infoGroup = new JPanel();
-        // infoGroup.setLayout(new BoxLayout(infoGroup, BoxLayout.X_AXIS)); // เปลี่ยนบรรทัดนี้
-        infoGroup.setLayout(new GridBagLayout()); // *** เปลี่ยนมาใช้ GridBagLayout ***
+        infoGroup.setLayout(new GridBagLayout()); // เปลี่ยนมาใช้ GridBagLayout 
         infoGroup.setOpaque(false);
-
-        // infoGroup.setAlignmentY(Component.TOP_ALIGNMENT); // ไม่จำเป็นต้องใช้กับ GridBagLayout
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(0, 0, 0, 0); // กำหนดระยะห่างเริ่มต้น (สามารถปรับได้)
@@ -93,7 +89,7 @@ public class Page6Panel extends JPanel {
 
         // --- รูปหนัง (ซ้าย) ---
         String movieImage = session.getMovieImage();
-        ImageIcon icon = new ImageIcon("Picture/" + movieImage);
+        ImageIcon icon = new ImageIcon(movieImage);
         Image img = icon.getImage().getScaledInstance(250, 350, Image.SCALE_SMOOTH);
         JLabel imageLabel = new JLabel(new ImageIcon(img));
 

@@ -63,7 +63,7 @@ public class CinemaApp extends JFrame {
 
     // ไปหน้า 4 
     public void showPage4() {
-    setContentPane(new Page4Panel(this));  // ไม่ส่ง parameter
+    setContentPane(new Page4Panel(this, bookingSession.getMovieImage()));  // ไม่ส่ง parameter
     revalidate();
     repaint();
     }
@@ -76,8 +76,8 @@ public class CinemaApp extends JFrame {
     }
 
     // ไปหน้า 4.2 (ถ้าเลือก add-on)
-    public void showPage42(String setName, String price, String imageFile) {
-        setContentPane(new Page42Panel(this, setName, price, imageFile));
+    public void showPage42(String setName, String price, String imageFile, String movieImage) {
+        setContentPane(new Page42Panel(this, setName, price, imageFile, movieImage));
         revalidate();
         repaint();
     }

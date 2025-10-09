@@ -1,5 +1,4 @@
 package GUI;
-
 import Class.*;
 import java.awt.*;
 import java.io.File;
@@ -11,7 +10,7 @@ public class Page5Panel extends JPanel {
     public CinemaApp app;
     public String fromPage; 
     private JTextField mobileField; 
- private Image backgroundImage;
+    private Image backgroundImage;
 
     public Page5Panel(CinemaApp app, String fromPage) {
         this.app = app;
@@ -34,25 +33,25 @@ public class Page5Panel extends JPanel {
         centerPanel.setOpaque(false);
 
         // ===== Title =====
-JLabel titleLabel = new JLabel("Confirm", SwingConstants.CENTER);
-titleLabel.setFont(new Font("Arial Rounded MT Bold", Font.BOLD, 50));
-titleLabel.setForeground(Color.WHITE);
-titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-titleLabel.setBorder(BorderFactory.createEmptyBorder(35, 35, 0, 35));
-centerPanel.add(titleLabel);
+        JLabel titleLabel = new JLabel("Confirm", SwingConstants.CENTER);
+        titleLabel.setFont(new Font("Arial Rounded MT Bold", Font.BOLD, 50));
+        titleLabel.setForeground(Color.WHITE);
+        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        titleLabel.setBorder(BorderFactory.createEmptyBorder(35, 35, 0, 35));
+        centerPanel.add(titleLabel);
 
-// ===== เส้นใต้ =====
-JPanel separatorPanel = new JPanel();
-separatorPanel.setLayout(new BoxLayout(separatorPanel, BoxLayout.X_AXIS));
-separatorPanel.setOpaque(false);
-separatorPanel.setBorder(BorderFactory.createEmptyBorder(20, 35, 10, 35)); // ขอบซ้ายขวา
+        // ===== เส้นใต้ =====
+        JPanel separatorPanel = new JPanel();
+        separatorPanel.setLayout(new BoxLayout(separatorPanel, BoxLayout.X_AXIS));
+        separatorPanel.setOpaque(false);
+        separatorPanel.setBorder(BorderFactory.createEmptyBorder(20, 35, 10, 35)); // ขอบซ้ายขวา
 
-JSeparator separator = new JSeparator();
-separator.setForeground(Color.WHITE);
-separator.setMaximumSize(new Dimension(Integer.MAX_VALUE, 1)); // ความสูงของเส้น
-separatorPanel.add(separator);
+        JSeparator separator = new JSeparator();
+        separator.setForeground(Color.WHITE);
+        separator.setMaximumSize(new Dimension(Integer.MAX_VALUE, 1)); // ความสูงของเส้น
+        separatorPanel.add(separator);
 
-centerPanel.add(separatorPanel);
+        centerPanel.add(separatorPanel);
 
         // ===== Form =====
         JPanel formPanel = new JPanel(new GridBagLayout());
@@ -115,7 +114,8 @@ centerPanel.add(separatorPanel);
             } else if ("Page42Panel".equals(fromPage)) {
                 app.showPage42(session.getSelectedAddonName(),
                         session.getSelectedAddonPrice(),
-                        session.getSelectedAddonImage());
+                        session.getSelectedAddonImage(),
+                        session.getMovieImage());
             }
         });
 

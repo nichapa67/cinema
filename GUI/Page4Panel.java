@@ -1,6 +1,5 @@
 package GUI;
-
-import Class.BookingSession;
+import Class.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
@@ -12,7 +11,7 @@ public class Page4Panel extends JPanel {
     public CinemaApp app;
     private Image backgroundImage;
 
-    public Page4Panel(CinemaApp app) {
+    public Page4Panel(CinemaApp app, String movieImage) {
         this.app = app;
         setLayout(new BorderLayout(20, 20));
         
@@ -50,8 +49,17 @@ public class Page4Panel extends JPanel {
         add(topPanel, BorderLayout.NORTH);
 
         // ===== Center: left image / right info =====
-        JPanel centerPanel = new JPanel(new GridLayout(1, 2, 20, 0));
+
+        // *** 1. เปลี่ยน centerPanel ให้ใช้ BoxLayout และจัดกึ่งกลาง ***
+        JPanel centerPanel = new JPanel();
+        centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
         centerPanel.setOpaque(false);
+        centerPanel.setBorder(BorderFactory.createEmptyBorder(65, 0, 20, 0)); 
+
+        // --- 2. สร้าง infoGroup เพื่อรวมซ้าย-ขวา (คล้าย Grid Bag Layout ของ Page42Panel) ---
+        JPanel infoGroup = new JPanel(new FlowLayout(FlowLayout.CENTER, 150, 0));
+        infoGroup.setOpaque(false);
+        infoGroup.setAlignmentY(Component.TOP_ALIGNMENT);
 
         // left: movie image centered vertically
         JPanel leftPanel = new JPanel(new GridBagLayout());
@@ -61,8 +69,7 @@ public class Page4Panel extends JPanel {
         moviePhoto.setVerticalAlignment(SwingConstants.CENTER);
 
         if (session.getMovieImage() != null) {
-            // path: adjust to your actual folder ("Picture/...")
-            ImageIcon icon = new ImageIcon("Picture/" + session.getMovieImage());
+            ImageIcon icon = new ImageIcon(movieImage);
             Image scaled = icon.getImage().getScaledInstance(250, 350, Image.SCALE_SMOOTH);
             moviePhoto.setIcon(new ImageIcon(scaled));
         } else {
@@ -70,9 +77,9 @@ public class Page4Panel extends JPanel {
             moviePhoto.setForeground(Color.WHITE);
         }
 
-        leftPanel.add(moviePhoto); // GridBagLayout จะ center ให้อัตโนมัติ
-        centerPanel.add(leftPanel);
-       centerPanel.setBorder(BorderFactory.createEmptyBorder(-10, 0, 20, 0)); 
+        leftPanel.add(moviePhoto); 
+        // *** เพิ่ม leftPanel เข้า infoGroup แทน centerPanel ***
+        infoGroup.add(leftPanel); 
 
         // right: info block centered (use GridBagLayout to center the whole infoPanel)
         JPanel rightPanel = new JPanel(new GridBagLayout());
@@ -81,12 +88,11 @@ public class Page4Panel extends JPanel {
         JPanel infoPanel = new JPanel();
         infoPanel.setOpaque(false);
         infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
-        // fix width so labels align consistently
         infoPanel.setMaximumSize(new Dimension(380, 400));
         infoPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         // labels ชิดซ้าย แต่กล่องรวมอยู่ตรงกลาง
-        JLabel nameLabel = makeInfoLabel("Name: " + nonNull(session.getMovieName()));
+        JLabel nameLabel = makeInfoLabel("Movie: " + nonNull(session.getMovieName()));
         JLabel dateLabel = makeInfoLabel("Date: " + nonNull(session.getDate()));
         JLabel timeLabel = makeInfoLabel("Time: " + nonNull(session.getTime()));
         String seatText = String.join(", ", session.getSelectedSeats());
@@ -99,15 +105,15 @@ public class Page4Panel extends JPanel {
         seatLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         // stack labels with even spacing
-        infoPanel.add(Box.createVerticalStrut(6));
-        infoPanel.add(nameLabel);
-        infoPanel.add(Box.createVerticalStrut(12));
-        infoPanel.add(dateLabel);
-        infoPanel.add(Box.createVerticalStrut(12));
-        infoPanel.add(timeLabel);
-        infoPanel.add(Box.createVerticalStrut(12));
-        infoPanel.add(seatLabel);
         infoPanel.add(Box.createVerticalStrut(20));
+        infoPanel.add(nameLabel);
+        infoPanel.add(Box.createVerticalStrut(20));
+        infoPanel.add(dateLabel);
+        infoPanel.add(Box.createVerticalStrut(20));
+        infoPanel.add(timeLabel);
+        infoPanel.add(Box.createVerticalStrut(20));
+        infoPanel.add(seatLabel);
+        infoPanel.add(Box.createVerticalStrut(25));
 
         // ADD ON button (fixed size, centered)
         JButton addOnButton = new JButton("ADD ON");
@@ -131,29 +137,39 @@ public class Page4Panel extends JPanel {
         gbc.anchor = GridBagConstraints.CENTER;
         rightPanel.add(infoPanel, gbc);
 
-        centerPanel.add(rightPanel);
+        // *** เพิ่ม rightPanel เข้า infoGroup แทน centerPanel ***
+        infoGroup.add(rightPanel);
+
+        // --- 3. ห่อ infoGroup ด้วย wrapperPanel เพื่อจัดกึ่งกลาง ---
+        JPanel wrapperPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        wrapperPanel.setOpaque(false);
+        wrapperPanel.add(infoGroup);
+        wrapperPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        centerPanel.add(wrapperPanel);
+        centerPanel.add(Box.createVerticalGlue()); // ดันเนื้อหาขึ้นด้านบน
+
         add(centerPanel, BorderLayout.CENTER);
+
         
-
-
         // ===== Bottom buttons: a bit raised from bottom =====
         JPanel bottomPanel = new JPanel(new GridLayout(1, 2, 10, 0));
         bottomPanel.setOpaque(false);
         bottomPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0)); // top,left,bottom,right
 
         JButton backButton = new JButton("Back");
-        backButton.setFont(new Font("Arial Rounded MT Bold", Font.BOLD, 18));
+        backButton.setFont(new Font("Arial Rounded MT Bold", Font.BOLD, 20));
         backButton.setBackground(Color.decode("#3f2fbf"));
         backButton.setForeground(Color.WHITE);
-        backButton.setPreferredSize(new Dimension(500, 46));
+        backButton.setPreferredSize(new Dimension(500, 50));
         backButton.setFocusPainted(false);
         backButton.addActionListener(e -> app.showPage3());
 
         JButton continueButton = new JButton("Continue");
-        continueButton.setFont(new Font("Arial Rounded MT Bold", Font.BOLD, 18));
+        continueButton.setFont(new Font("Arial Rounded MT Bold", Font.BOLD, 20));
         continueButton.setBackground(Color.decode("#3f2fbf"));
         continueButton.setForeground(Color.WHITE);
-        continueButton.setPreferredSize(new Dimension(500, 46));
+        continueButton.setPreferredSize(new Dimension(500, 50));
         continueButton.setFocusPainted(false);
         continueButton.addActionListener(e -> {
         // เคลียร์ Add-on ถ้าผู้ใช้กด Continue จาก Page4 โดยไม่เลือก Add-on
@@ -169,7 +185,7 @@ public class Page4Panel extends JPanel {
 
     private JLabel makeInfoLabel(String text) {
         JLabel label = new JLabel(text);
-        label.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 20));
+        label.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 30));
         label.setForeground(Color.WHITE);
         return label;
     }
@@ -193,5 +209,4 @@ public class Page4Panel extends JPanel {
             g2d.dispose();
         }
     }
-
 }

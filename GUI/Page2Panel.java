@@ -1,8 +1,12 @@
 package GUI;
 import java.awt.*;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import java.util.List;
 import java.util.ArrayList;
+import java.util.Arrays;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
@@ -17,7 +21,27 @@ public class Page2Panel extends JPanel {
     public Page2Panel(CinemaApp app, String movieName, String movieImage) {
         
         setLayout(new BorderLayout(15, 15));
-   
+
+        // โหลดข้อมูลวันเวลา จากไฟล์ movies.csv
+        List<String> dates = new ArrayList<>();
+        List<String> times = new ArrayList<>();
+
+        try (BufferedReader br = new BufferedReader(new FileReader("File/movies.csv"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                line = line.trim();
+                if (line.isEmpty()) continue;
+
+                String[] p = line.split(",", 4);
+                if (p.length >= 4 && p[0].trim().equalsIgnoreCase(movieName)) {
+                    dates = Arrays.asList(p[2].trim().split(";"));
+                    times = Arrays.asList(p[3].trim().split(";"));
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         //ภาพพื้นหลัง
         try {
@@ -41,7 +65,7 @@ public class Page2Panel extends JPanel {
         leftPanel.setOpaque(false); // ให้โปร่งใส
 
         // รูปหนัง
-        ImageIcon icon = new ImageIcon("Picture/" + movieImage);
+        ImageIcon icon = new ImageIcon(movieImage);
         Image img = icon.getImage().getScaledInstance(280, 400, Image.SCALE_SMOOTH);
         JLabel moviePoster = new JLabel(new ImageIcon(img));
         leftPanel.add(moviePoster, BorderLayout.CENTER);
@@ -50,13 +74,12 @@ public class Page2Panel extends JPanel {
 
         title.setBorder(BorderFactory.createEmptyBorder(35, 50, 10, 0)); 
 
-       // rightPanel: ตั้ง layout เป็นแนวตั้ง
+        // rightPanel: ตั้ง layout เป็นแนวตั้ง
         JPanel rightPanel = new JPanel();
         rightPanel.setOpaque(false);
         rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
 
         rightPanel.setBorder(BorderFactory.createEmptyBorder(60, 0, 50, 0));
-
 
         // ชื่อหนัง
         JLabel movieLabel = new JLabel(movieName);
@@ -84,7 +107,6 @@ public class Page2Panel extends JPanel {
         rightPanel.add(labelPanel);
         rightPanel.add(Box.createVerticalStrut(10));
         
-  
         // โหลดไอคอน Date
         ImageIcon dateIcon = new ImageIcon("Picture/icon/date.png");
         Image dateImg = dateIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
@@ -104,12 +126,10 @@ public class Page2Panel extends JPanel {
         dateHeaderPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, -60, 0)); 
         rightPanel.add(dateHeaderPanel);
 
-        // ปุ่มเลือกวัน
+        /*// ปุ่มเลือกวัน
         JPanel datePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
         datePanel.setOpaque(false);
         datePanel.setAlignmentX(Component.LEFT_ALIGNMENT); // ชิดซ้าย
-
-
 
         JButton date1 = createWhiteButton("20/9/2025");
         JButton date2 = createWhiteButton("21/9/2025");
@@ -122,6 +142,19 @@ public class Page2Panel extends JPanel {
 
         datePanel.add(date1);
         datePanel.add(date2);
+        rightPanel.add(datePanel);*/
+
+        // ปุ่มเลือกวัน (จากไฟล์)
+        JPanel datePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
+        datePanel.setOpaque(false);
+        datePanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        for (String d : dates) {
+            JButton dateBtn = createWhiteButton(d);
+            dateBtn.addActionListener(e -> toggleDate(d, dateBtn));
+            dateButtons.add(dateBtn);
+            datePanel.add(dateBtn);
+        }
         rightPanel.add(datePanel);
      
         // โหลดไอคอน Date
@@ -144,7 +177,7 @@ public class Page2Panel extends JPanel {
 
         rightPanel.add(timeHeaderPanel);
 
-        // ปุ่มเลือกเวลา
+        /*// ปุ่มเลือกเวลา
         JPanel timePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
         timePanel.setOpaque(false);
         timePanel.setAlignmentX(Component.LEFT_ALIGNMENT); // ชิดซ้าย
@@ -164,6 +197,19 @@ public class Page2Panel extends JPanel {
 
         timePanel.add(t1); timePanel.add(t2);
         timePanel.add(t3); timePanel.add(t4);
+        rightPanel.add(timePanel);*/
+
+        // ปุ่มเลือกเวลาจากไฟล์ CSV
+        JPanel timePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
+        timePanel.setOpaque(false);
+        timePanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        for (String t : times) {
+            JButton timeBtn = createWhiteButton(t);
+            timeBtn.addActionListener(e -> toggleTime(t, timeBtn));
+            timeButtons.add(timeBtn);
+            timePanel.add(timeBtn);
+        }
         rightPanel.add(timePanel);
 
         // เพิ่ม rightPanel เข้า contentPanel
@@ -173,12 +219,9 @@ public class Page2Panel extends JPanel {
         JPanel bottomPanel = new JPanel(new GridLayout(1, 2, 10, 0));
         bottomPanel.setOpaque(false); // ให้โปร่งใส
 
-
         JButton backBtn = createBlueButton("Back");
         JButton continueBtn = createBlueButton("Continue");
 
-
-        
         //แจ้งเตือนถ้าไม่ได้เลือก Date หรือ Time
         backBtn.addActionListener(e -> app.showPage1());
         continueBtn.addActionListener(e -> {
@@ -212,8 +255,8 @@ public class Page2Panel extends JPanel {
         btn.setBackground(Color.decode("#3f2fbf"));
         btn.setForeground(Color.WHITE);
         btn.setFocusPainted(false);
-        btn.setFont(new Font("Arial Rounded MT Bold", Font.BOLD, 18));
-        btn.setPreferredSize(new Dimension(500, 46));
+        btn.setFont(new Font("Arial Rounded MT Bold", Font.BOLD, 20));
+        btn.setPreferredSize(new Dimension(500, 50));
         return btn;
     }
     // Toggle Date เพื่อเลือกวัน 
@@ -265,7 +308,7 @@ public class Page2Panel extends JPanel {
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.7f)); // ความจาง
             g2d.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
             
- // วาด Overlay สีดำโปร่งใสเพื่อทำให้มืดลง
+        // วาด Overlay สีดำโปร่งใสเพื่อทำให้มืดลง
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.8f)); // ปรับความเข้ม
         g2d.setColor(Color.BLACK);
         g2d.fillRect(0, 0, getWidth(), getHeight());
