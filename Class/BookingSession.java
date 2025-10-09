@@ -117,7 +117,6 @@ public class BookingSession {
         bookingID = null;
     }
 
-    
     // ===== Mobile =====
     public void setMobile(String mobile) { this.mobile = mobile; }
     public String getMobile() { return mobile; }
@@ -156,8 +155,6 @@ public class BookingSession {
     
     public void setBookingID(String bookingID) { this.bookingID = bookingID; }
     public String getBookingID() { return bookingID; }
-
-
 
     // ===== Debug =====
     @Override
