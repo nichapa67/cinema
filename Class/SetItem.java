@@ -1,22 +1,46 @@
 package Class;
-
 public class SetItem {
     private String name;
-    private String imagePath;
     private int price;
-    private String imagePath; // เพิ่มฟิลด์ใหม่
+    private String imagePath;
 
-    public SetItem(String name, String imagePath, int price) {
+    public SetItem(String csvLine) {
+        String[] p = csvLine.split(",", 3);
+        this.name = p.length > 0 ? p[0].trim() : "";
+        this.imagePath = p.length > 1 ? p[1].trim() : "";
+        try {
+            this.price = p.length > 2 ? Integer.parseInt(p[2].trim()) : 0;
+        } catch (NumberFormatException e) {
+            this.price = 0;
+        }
+    }
+
+    public SetItem(String name, int price, String imagePath) {
         this.name = name;
-        this.imagePath = imagePath;
         this.price = price;
+        this.imagePath = imagePath;
     }
 
     public String getName() { return name; }
-    public String getImagePath() { return imagePath; }
     public int getPrice() { return price; }
+    public String getImagePath() { return imagePath; }
 
-    @Override
+    public void setName(String name) { this.name = name; }
+    public void setPrice(int price) { this.price = price; }
+    public void setImagePath(String imagePath) { this.imagePath = imagePath; }
+
+    public String toCSV() {
+        return name + "," + imagePath + "," + price;
+    }
+
+    public static SetItem fromCSV(String line) {
+        String[] parts = line.split(",", 3);
+        String name = parts[0];
+        int price = Integer.parseInt(parts[1]);
+        String imagePath = parts.length > 2 ? parts[2] : "";
+        return new SetItem(name, price, imagePath);
+    }
+
     public String toString() {
         return name + " (" + price + " THB)";
     }
@@ -24,26 +48,41 @@ public class SetItem {
 
 /*public class SetItem {
     private String name;
+    private String imagePath;
     private int price;
-    private String imagePath; // เพิ่มฟิลด์ใหม่
 
-    // Constructor ใหม่ (3 พารามิเตอร์)
-    public SetItem(String name, int price, String imagePath) {
+    public SetItem(String name, String imagePath, int price) {
         this.name = name;
-        this.price = price;
         this.imagePath = imagePath;
+        this.price = price;
     }
 
-    // Constructor เดิม (เผื่อโค้ดอื่นเรียกใช้)
-    public SetItem(String name, int price) {
-        this(name, price, null);
+    public SetItem(String csvLine) {
+        String[] p = csvLine.split(",", 3);
+        this.name = p.length > 0 ? p[0].trim() : "";
+        this.imagePath = p.length > 1 ? p[1].trim() : "";
+        try {
+            this.price = p.length > 2 ? Integer.parseInt(p[2].trim()) : 0;
+        } catch (NumberFormatException e) {
+            this.price = 0;
+        }
     }
 
     public String getName() { return name; }
+    public String getImagePath() { return imagePath; }
     public int getPrice() { return price; }
 
-    // Getter สำหรับ path ของรูป
-    public String getImagePath() { return imagePath; }
+    public void setName(String name) { this.name = name; }
+    public void setImagePath(String imagePath) { this.imagePath = imagePath; }
+    public void setPrice(int price) { this.price = price; }
+
+    public String toCSV() {
+    return name + "," + imagePath + "," + price;
+    }
+
+    public static SetItem fromCSV(String line) {
+        return new SetItem(line);
+    }
 
     @Override
     public String toString() {
