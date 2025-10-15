@@ -7,8 +7,9 @@ public class AdminPanel extends JFrame {
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(AdminPanel.class.getName());
 
     public AdminPanel() {
+        setTitle("Admin Cinema");
         initComponents();
-
+        
         // เริ่มต้นเปิดหน้าหนัง (AdminP1) เป็นค่าเริ่มต้น
         panelMain.setLayout(new BorderLayout());
         panelMain.add(new AdminP1(), BorderLayout.CENTER);
@@ -92,16 +93,12 @@ public class AdminPanel extends JFrame {
         // ===== Main Panel =====
         panelMain.setBackground(new java.awt.Color(111, 21, 21));
 
-        /*javax.swing.GroupLayout panelMainLayout = new javax.swing.GroupLayout(panelMain);
+        javax.swing.GroupLayout panelMainLayout = new javax.swing.GroupLayout(panelMain);
         panelMain.setLayout(panelMainLayout);
         panelMainLayout.setHorizontalGroup(
             panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGap(0, 744, Short.MAX_VALUE)
         );
-        panelMainLayout.setVerticalGroup(
-            panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGap(0, 0, Short.MAX_VALUE)
-        );*/
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);

@@ -48,108 +48,108 @@ public class Page4Panel extends JPanel {
         topPanel.add(priceLabel);
         add(topPanel, BorderLayout.NORTH);
 
-        // ===== Center: left image / right info =====
+// ===== Center: left image / right info =====
 
-        // *** 1. เปลี่ยน centerPanel ให้ใช้ BoxLayout และจัดกึ่งกลาง ***
-        JPanel centerPanel = new JPanel();
-        centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
-        centerPanel.setOpaque(false);
-        centerPanel.setBorder(BorderFactory.createEmptyBorder(65, 0, 20, 0)); 
+// *** 1. เปลี่ยน centerPanel ให้ใช้ BoxLayout และจัดกึ่งกลาง ***
+JPanel centerPanel = new JPanel();
+centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
+centerPanel.setOpaque(false);
+centerPanel.setBorder(BorderFactory.createEmptyBorder(65, 0, 20, 0)); 
 
-        // --- 2. สร้าง infoGroup เพื่อรวมซ้าย-ขวา (คล้าย Grid Bag Layout ของ Page42Panel) ---
-        JPanel infoGroup = new JPanel(new FlowLayout(FlowLayout.CENTER, 150, 0));
-        infoGroup.setOpaque(false);
-        infoGroup.setAlignmentY(Component.TOP_ALIGNMENT);
+// --- 2. สร้าง infoGroup เพื่อรวมซ้าย-ขวา (คล้าย Grid Bag Layout ของ Page42Panel) ---
+JPanel infoGroup = new JPanel(new FlowLayout(FlowLayout.CENTER, 150, 0));
+infoGroup.setOpaque(false);
+infoGroup.setAlignmentY(Component.TOP_ALIGNMENT);
 
-        // left: movie image centered vertically
-        JPanel leftPanel = new JPanel(new GridBagLayout());
-        leftPanel.setOpaque(false);
-        JLabel moviePhoto = new JLabel();
-        moviePhoto.setHorizontalAlignment(SwingConstants.CENTER);
-        moviePhoto.setVerticalAlignment(SwingConstants.CENTER);
+// left: movie image centered vertically
+JPanel leftPanel = new JPanel(new GridBagLayout());
+leftPanel.setOpaque(false);
+JLabel moviePhoto = new JLabel();
+moviePhoto.setHorizontalAlignment(SwingConstants.CENTER);
+moviePhoto.setVerticalAlignment(SwingConstants.CENTER);
 
-        if (session.getMovieImage() != null) {
-            ImageIcon icon = new ImageIcon(movieImage);
-            Image scaled = icon.getImage().getScaledInstance(250, 350, Image.SCALE_SMOOTH);
-            moviePhoto.setIcon(new ImageIcon(scaled));
-        } else {
-            moviePhoto.setText("Movie Photo");
-            moviePhoto.setForeground(Color.WHITE);
-        }
+if (session.getMovieImage() != null) {
+    ImageIcon icon = new ImageIcon(movieImage);
+    Image scaled = icon.getImage().getScaledInstance(250, 350, Image.SCALE_SMOOTH);
+    moviePhoto.setIcon(new ImageIcon(scaled));
+} else {
+    moviePhoto.setText("Movie Photo");
+    moviePhoto.setForeground(Color.WHITE);
+}
 
-        leftPanel.add(moviePhoto); 
-        // *** เพิ่ม leftPanel เข้า infoGroup แทน centerPanel ***
-        infoGroup.add(leftPanel); 
+leftPanel.add(moviePhoto); 
+// *** เพิ่ม leftPanel เข้า infoGroup แทน centerPanel ***
+infoGroup.add(leftPanel); 
 
-        // right: info block centered (use GridBagLayout to center the whole infoPanel)
-        JPanel rightPanel = new JPanel(new GridBagLayout());
-        rightPanel.setOpaque(false);
+// right: info block centered (use GridBagLayout to center the whole infoPanel)
+JPanel rightPanel = new JPanel(new GridBagLayout());
+rightPanel.setOpaque(false);
 
-        JPanel infoPanel = new JPanel();
-        infoPanel.setOpaque(false);
-        infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
-        infoPanel.setMaximumSize(new Dimension(380, 400));
-        infoPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+JPanel infoPanel = new JPanel();
+infoPanel.setOpaque(false);
+infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
+infoPanel.setMaximumSize(new Dimension(380, 400));
+infoPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // labels ชิดซ้าย แต่กล่องรวมอยู่ตรงกลาง
-        JLabel nameLabel = makeInfoLabel("Movie: " + nonNull(session.getMovieName()));
-        JLabel dateLabel = makeInfoLabel("Date: " + nonNull(session.getDate()));
-        JLabel timeLabel = makeInfoLabel("Time: " + nonNull(session.getTime()));
-        String seatText = String.join(", ", session.getSelectedSeats());
-        JLabel seatLabel = makeInfoLabel("Seat: " + (seatText.isEmpty() ? "-" : seatText));
+// labels ชิดซ้าย แต่กล่องรวมอยู่ตรงกลาง
+JLabel nameLabel = makeInfoLabel("Movie: " + nonNull(session.getMovieName()));
+JLabel dateLabel = makeInfoLabel("Date: " + nonNull(session.getDate()));
+JLabel timeLabel = makeInfoLabel("Time: " + nonNull(session.getTime()));
+String seatText = String.join(", ", session.getSelectedSeats());
+JLabel seatLabel = makeInfoLabel("Seat: " + (seatText.isEmpty() ? "-" : seatText));
 
-        // ชิดซ้ายในกล่อง
-        nameLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        dateLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        timeLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        seatLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+// ชิดซ้ายในกล่อง
+nameLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+dateLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+timeLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+seatLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        // stack labels with even spacing
-        infoPanel.add(Box.createVerticalStrut(20));
-        infoPanel.add(nameLabel);
-        infoPanel.add(Box.createVerticalStrut(20));
-        infoPanel.add(dateLabel);
-        infoPanel.add(Box.createVerticalStrut(20));
-        infoPanel.add(timeLabel);
-        infoPanel.add(Box.createVerticalStrut(20));
-        infoPanel.add(seatLabel);
-        infoPanel.add(Box.createVerticalStrut(25));
+// stack labels with even spacing
+infoPanel.add(Box.createVerticalStrut(20));
+infoPanel.add(nameLabel);
+infoPanel.add(Box.createVerticalStrut(20));
+infoPanel.add(dateLabel);
+infoPanel.add(Box.createVerticalStrut(20));
+infoPanel.add(timeLabel);
+infoPanel.add(Box.createVerticalStrut(20));
+infoPanel.add(seatLabel);
+infoPanel.add(Box.createVerticalStrut(25));
 
-        // ADD ON button (fixed size, centered)
-        JButton addOnButton = new JButton("ADD ON");
-        addOnButton.setFont(new Font("Arial Rounded MT Bold", Font.BOLD, 20));
-        addOnButton.setBackground(Color.decode("#00bf63"));
-        addOnButton.setForeground(Color.BLACK);
-        addOnButton.setFocusPainted(false);
-        addOnButton.setPreferredSize(new Dimension(260, 60));
-        addOnButton.setMaximumSize(new Dimension(260, 60));
-        addOnButton.setAlignmentX(Component.LEFT_ALIGNMENT);
-        addOnButton.addActionListener(e -> app.showPage41());
+// ADD ON button (fixed size, centered)
+JButton addOnButton = new JButton("ADD ON");
+addOnButton.setFont(new Font("Arial Rounded MT Bold", Font.BOLD, 20));
+addOnButton.setBackground(Color.decode("#00bf63"));
+addOnButton.setForeground(Color.BLACK);
+addOnButton.setFocusPainted(false);
+addOnButton.setPreferredSize(new Dimension(260, 60));
+addOnButton.setMaximumSize(new Dimension(260, 60));
+addOnButton.setAlignmentX(Component.LEFT_ALIGNMENT);
+addOnButton.addActionListener(e -> app.showPage41());
 
-        infoPanel.add(addOnButton);
+infoPanel.add(addOnButton);
 
-        // place infoPanel in rightPanel centered both axes
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.weightx = 1.0;
-        gbc.weighty = 1.0;
-        gbc.anchor = GridBagConstraints.CENTER;
-        rightPanel.add(infoPanel, gbc);
+// place infoPanel in rightPanel centered both axes
+GridBagConstraints gbc = new GridBagConstraints();
+gbc.gridx = 0;
+gbc.gridy = 0;
+gbc.weightx = 1.0;
+gbc.weighty = 1.0;
+gbc.anchor = GridBagConstraints.CENTER;
+rightPanel.add(infoPanel, gbc);
 
-        // *** เพิ่ม rightPanel เข้า infoGroup แทน centerPanel ***
-        infoGroup.add(rightPanel);
+// *** เพิ่ม rightPanel เข้า infoGroup แทน centerPanel ***
+infoGroup.add(rightPanel);
 
-        // --- 3. ห่อ infoGroup ด้วย wrapperPanel เพื่อจัดกึ่งกลาง ---
-        JPanel wrapperPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        wrapperPanel.setOpaque(false);
-        wrapperPanel.add(infoGroup);
-        wrapperPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+// --- 3. ห่อ infoGroup ด้วย wrapperPanel เพื่อจัดกึ่งกลาง ---
+JPanel wrapperPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+wrapperPanel.setOpaque(false);
+wrapperPanel.add(infoGroup);
+wrapperPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        centerPanel.add(wrapperPanel);
-        centerPanel.add(Box.createVerticalGlue()); // ดันเนื้อหาขึ้นด้านบน
+centerPanel.add(wrapperPanel);
+centerPanel.add(Box.createVerticalGlue()); // ดันเนื้อหาขึ้นด้านบน
 
-        add(centerPanel, BorderLayout.CENTER);
+add(centerPanel, BorderLayout.CENTER);
 
         
         // ===== Bottom buttons: a bit raised from bottom =====
@@ -199,10 +199,10 @@ public class Page4Panel extends JPanel {
 
         if (backgroundImage != null) {
             Graphics2D g2d = (Graphics2D) g.create();
-            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.7f));
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.9f));
             g2d.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
 
-            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.85f));
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.7f));
             g2d.setColor(Color.BLACK);
             g2d.fillRect(0, 0, getWidth(), getHeight());
 
