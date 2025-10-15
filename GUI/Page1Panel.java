@@ -47,7 +47,7 @@ public class Page1Panel extends JPanel {
         Collections.reverse(movies);
 
         // ===== Panel รวมหนังทั้งหมด (3 แถว 4 หลัก) =====
-        JPanel allMoviesPanel = new JPanel(new GridLayout(3, 4, 15, 15));
+        JPanel allMoviesPanel = new JPanel(new GridLayout(0, 4, 15, 15));
         allMoviesPanel.setOpaque(false);
 
         // ===== สร้างปุ่มหนังแต่ละเรื่อง =====
@@ -109,11 +109,11 @@ public class Page1Panel extends JPanel {
 
         if (backgroundImage != null) {
             Graphics2D g2d = (Graphics2D) g.create();
-            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.7f)); // ความจาง
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.9f)); // ความจาง
             g2d.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
             
         // วาด Overlay สีดำโปร่งใสเพื่อทำให้มืดลง
-        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.8f)); // ปรับความเข้ม
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.7f)); // ปรับความเข้ม
         g2d.setColor(Color.BLACK);
         g2d.fillRect(0, 0, getWidth(), getHeight());
 

@@ -30,13 +30,13 @@ public class Movie {
             }
         }
     }
-    public Movie(String name, String imagePath, List<String> dates, List<String> times) {
-    this.name = name;
-    this.imagePath = imagePath;
-    this.dates = dates;
-    this.times = times;
 
-}
+    public Movie(String name, String imagePath, List<String> dates, List<String> times) {
+        this.name = name;
+        this.imagePath = imagePath;
+        this.dates = dates;
+        this.times = times;
+    }
 
     public String getName() { return name; }
     public List<String> getDates() { return dates; }

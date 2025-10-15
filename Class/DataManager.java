@@ -1,5 +1,11 @@
 package Class;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
+
+import javax.swing.JOptionPane;
 
 public class DataManager {
     private static List<Movie> movies = new ArrayList<>();
@@ -38,4 +44,49 @@ public class DataManager {
     }
 
     public static void refresh() { loadAll(); }
+
+    public static void saveMoviesFile() {
+        try {
+            File file = new File("File/movies.csv");
+            BufferedWriter writer = new BufferedWriter(new FileWriter(file, false));
+
+            for (Movie m : movies) {
+                String line = String.join(",",
+                    m.getName(),
+                    m.getImagePath(),
+                    String.join(";", m.getDates()),
+                    String.join(";", m.getTimes())
+                );
+                writer.write(line);
+                writer.newLine();
+            }
+
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error writing to movies.csv");
+        }
+    }
+
+    public static void saveSetsFile() {
+        try {
+            File file = new File("File/sets.csv");
+            BufferedWriter writer = new BufferedWriter(new FileWriter(file, false));
+
+            for (SetItem s : sets) {
+                String line = String.join(",",
+                    s.getName(),
+                    s.getImagePath(),
+                    String.valueOf(s.getPrice())
+                );
+                writer.write(line);
+                writer.newLine();
+            }
+
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error writing to sets.csv");
+        }
+    }
 }

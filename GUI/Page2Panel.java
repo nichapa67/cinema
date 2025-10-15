@@ -4,9 +4,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
@@ -99,7 +99,7 @@ public class Page2Panel extends JPanel {
         JSeparator separator = new JSeparator(SwingConstants.HORIZONTAL);
         separator.setForeground(Color.WHITE);
         separator.setBackground(Color.WHITE);
-        separator.setMaximumSize(new Dimension(800, 3));
+        separator.setMaximumSize(new Dimension(900, 3));
         separator.setAlignmentX(Component.CENTER_ALIGNMENT);
         labelPanel.add(separator);
         labelPanel.add(Box.createVerticalStrut(10));
@@ -305,11 +305,11 @@ public class Page2Panel extends JPanel {
 
         if (backgroundImage != null) {
             Graphics2D g2d = (Graphics2D) g.create();
-            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.7f)); // ความจาง
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.9f)); // ความจาง
             g2d.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
             
         // วาด Overlay สีดำโปร่งใสเพื่อทำให้มืดลง
-        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.8f)); // ปรับความเข้ม
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.7f)); // ปรับความเข้ม
         g2d.setColor(Color.BLACK);
         g2d.fillRect(0, 0, getWidth(), getHeight());
 
